@@ -48,9 +48,7 @@ public class CommandsController {
     Console.WriteLine("[CommandsController] Commands created successfully.");
   }
 
-  public static void EatHandler(SocketSlashCommand cmd) { // Content is currently testing, ignore
-    // # Process arguments
-
+  public static void EatHandler(SocketSlashCommand cmd) {
     long timeType = 0;
     long timeValue = 0;
     IGuildChannel? channel = null;
@@ -78,20 +76,24 @@ public class CommandsController {
       }
     }
 
-    // # Validate arguments
+    if (ValidateEatArguments(timeType, timeValue, channel, eatExisting, eatFuture, cmd)) {
+      Eat(channel!, timeType, timeValue, eatExisting, eatFuture, cmd);
+    }
+  }
 
+  private static bool ValidateEatArguments(long timeType, long timeValue, IGuildChannel? channel, bool eatExisting, bool eatFuture, SocketSlashCommand cmd) {
     // If time type is zero or not equal to predefined values, log and respond error message
     if (timeType == 0 || (timeType != 1 && timeType != 60 && timeType != (long)60 * 60 && timeType != (long)60 * 60 * 24)) {
       cmd.RespondAsync("An error occurred. timeType value wrong: " + timeType, null, false, true);
       Console.WriteLine("[CommandsController] ERROR: timeType value wrong: " + timeType);
-      return;
+      return false;
     }
 
     // If time value is wrong, log and respond with an error message
     if (timeValue <= 0) {
       cmd.RespondAsync("Hours cannot be 0.", null, false, true);
       Console.WriteLine("[CommandsController] ERROR: timeValue value wrong: " + timeValue);
-      return;
+      return false;
     }
 
     // If no channel is specified, use the current channel
@@ -100,17 +102,19 @@ public class CommandsController {
     // If eatExisting is true but channel isn't a forum, respond with an error message
     if (eatExisting && channel.GetChannelType() != ChannelType.Forum) {
       cmd.RespondAsync("Eat existing can only be enabled on forum channels.");
-      return;
+      return false;
     }
 
     // If eatFuture is true but channel isn't a forum, respond with an error message
     if (eatFuture && channel.GetChannelType() != ChannelType.Forum) {
       cmd.RespondAsync("Eat Future can only be enabled on forum channels.");
-      return;
+      return false;
     }
 
-    // # Process command
+    return true;
+  }
 
+  private static void Eat(IGuildChannel channel, long timeType, long timeValue, bool eatExisting, bool eatFuture, SocketSlashCommand cmd) {
     TimeSpan eatIn = TimeSpan.FromSeconds(timeValue * timeType);
     DateTime eatTime = DateTime.UtcNow + eatIn;
 
