@@ -6,7 +6,7 @@ public static class TimeSpanExtensions {
       return "less than a second";
     }
 
-    var nonZeroComponents = new List<(int value, string name)>();
+    List<(int value, string name)> nonZeroComponents = new();
 
     if (timeSpan.Days > 0) {
       nonZeroComponents.Add((timeSpan.Days, "day"));
@@ -24,7 +24,7 @@ public static class TimeSpanExtensions {
       nonZeroComponents.Add((timeSpan.Seconds, "second"));
     }
 
-    var formattedComponents = nonZeroComponents
+    List<string> formattedComponents = nonZeroComponents
         .Select((c) => $"{c.value} {c.name}{(c.value == 1 ? "" : "s")}")
         .ToList();
 
