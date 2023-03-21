@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Net;
 using Discord.WebSocket;
 using Newtonsoft.Json;
@@ -6,20 +6,33 @@ using Newtonsoft.Json;
 namespace Fidobot.Controllers;
 
 public class CommandsController {
-  public static async Task CreateCommands(DiscordSocketClient client) { // Content is currently testing, ignore
+  public static async Task CreateCommands(DiscordSocketClient client) {
+    List<ChannelType> channels = new() { ChannelType.PublicThread, ChannelType.Forum };
+
     // Build eat command
     SlashCommandBuilder eatCmdBuilder = new();
     eatCmdBuilder.WithName("eat");
-    eatCmdBuilder.WithDescription("Eat this channel in X hours.");
-    List<ChannelType> channels = new() { ChannelType.PublicThread, ChannelType.Forum };
-    eatCmdBuilder.AddOption("fidotest", ApplicationCommandOptionType.Channel, "Testing", true, null, false, null, null, null, channels);
-    eatCmdBuilder.AddOption("time", ApplicationCommandOptionType.Integer, "In how many hours ?", true);
-    eatCmdBuilder.AddOption("channel", ApplicationCommandOptionType.Channel, "Which channel ? (Default: current)", false);
+    eatCmdBuilder.WithDescription("Eat this thread or configure specified forum for Fido.");
+    eatCmdBuilder.AddOption(new SlashCommandOptionBuilder()
+       .WithName("time-type")
+       .WithDescription("Time configuration type")
+       .WithRequired(true)
+       .AddChoice("Seconds", (long)1)
+       .AddChoice("Minutes", (long)60)
+       .AddChoice("Hours", (long)60 * 60)
+       .AddChoice("Days", (long)60 * 60 * 24)
+       .WithType(ApplicationCommandOptionType.Integer)
+    );
+    eatCmdBuilder.AddOption("time-value", ApplicationCommandOptionType.Integer, "Time configuration value", true);
+    eatCmdBuilder.AddOption("channel", ApplicationCommandOptionType.Channel, "Specify a thread or forum.", false, null, false, null, null, null, channels);
+    eatCmdBuilder.AddOption("eat-existing", ApplicationCommandOptionType.Boolean, "(Forum only) Should Fido eat existing threads with given time options ?", false);
+    eatCmdBuilder.AddOption("eat-future", ApplicationCommandOptionType.Boolean, "(Forum only) Should Fido eat future threads with given time options ?", false);
 
     // Build donteat command
     SlashCommandBuilder donteatCmdbuilder = new();
     donteatCmdbuilder.WithName("donteat");
     donteatCmdbuilder.WithDescription("Disables fidobot from eating this channel.");
+    donteatCmdbuilder.AddOption("channel", ApplicationCommandOptionType.Channel, "Specify a thread or forum.", false, null, false, null, null, null, channels);
 
     // Create commands
     try {
@@ -30,7 +43,7 @@ public class CommandsController {
       Console.WriteLine(json);
     }
 
-    await Program.Log(new LogMessage(LogSeverity.Verbose, "CommandsController", "Commands created successfully."));
+    Console.WriteLine("[CommandsController] Commands created successfully.");
   }
 
   public static void EatHandler(SocketSlashCommand cmd) { // Content is currently testing, ignore
