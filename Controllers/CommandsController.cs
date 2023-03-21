@@ -1,6 +1,8 @@
-using Discord;
+﻿using Discord;
 using Discord.Net;
 using Discord.WebSocket;
+using Fidobot.Services;
+using Fidobot.Utilities;
 using Newtonsoft.Json;
 
 namespace Fidobot.Controllers;
@@ -47,33 +49,77 @@ public class CommandsController {
   }
 
   public static void EatHandler(SocketSlashCommand cmd) { // Content is currently testing, ignore
-    long hours = 0;
+    // # Process arguments
+
+    long timeType = 0;
+    long timeValue = 0;
     IGuildChannel? channel = null;
+    bool eatExisting = false;
+    bool eatFuture = false;
 
     // Loop through command options and assign values to variables
     foreach (SocketSlashCommandDataOption option in cmd.Data.Options) {
       switch (option.Name) {
-        case "time":
-          hours = (long)option.Value;
+        case "time-type":
+          timeType = (long)option.Value;
+          break;
+        case "time-value":
+          timeValue = (long)option.Value;
           break;
         case "channel":
           channel = (IGuildChannel)option.Value;
           break;
+        case "eat-existing":
+          eatExisting = (bool)option.Value;
+          break;
+        case "eat-future":
+          eatFuture = (bool)option.Value;
+          break;
       }
     }
 
-    Console.WriteLine("eat command used in : " + cmd.Channel.GetChannelType());
+    // # Validate arguments
 
-    // If hours is less than or equal to 0, respond with an error message
-    if (hours <= 0) {
+    // If time type is zero or not equal to predefined values, log and respond error message
+    if (timeType == 0 || (timeType != 1 && timeType != 60 && timeType != (long)60 * 60 && timeType != (long)60 * 60 * 24)) {
+      cmd.RespondAsync("An error occurred. timeType value wrong: " + timeType, null, false, true);
+      Console.WriteLine("[CommandsController] ERROR: timeType value wrong: " + timeType);
+      return;
+    }
+
+    // If time value is wrong, log and respond with an error message
+    if (timeValue <= 0) {
       cmd.RespondAsync("Hours cannot be 0.", null, false, true);
+      Console.WriteLine("[CommandsController] ERROR: timeValue value wrong: " + timeValue);
       return;
     }
 
     // If no channel is specified, use the current channel
     channel ??= (IGuildChannel)cmd.Channel;
 
-    cmd.RespondAsync("Will eat #" + channel.Name + " in " + hours + " hours.", null, false, true);
+    // If eatExisting is true but channel isn't a forum, respond with an error message
+    if (eatExisting && channel.GetChannelType() != ChannelType.Forum) {
+      cmd.RespondAsync("Eat existing can only be enabled on forum channels.");
+      return;
+    }
+
+    // If eatFuture is true but channel isn't a forum, respond with an error message
+    if (eatFuture && channel.GetChannelType() != ChannelType.Forum) {
+      cmd.RespondAsync("Eat Future can only be enabled on forum channels.");
+      return;
+    }
+
+    // # Process command
+
+    TimeSpan eatIn = TimeSpan.FromSeconds(timeValue * timeType);
+    DateTime eatTime = DateTime.UtcNow + eatIn;
+
+    if (channel.GetChannelType() == ChannelType.PublicThread) { // If thread
+      ThreadService.EatThread(channel, eatTime);
+      cmd.RespondAsync("Will eat #" + channel.Name + " in " + eatIn.ToDynamicString() + ".", null, false, true);
+    } else { // If Forum
+      //TBD
+    }
   }
 
   public static void DontEatHandler(SocketSlashCommand cmd) { // Content is currently testing, ignore
