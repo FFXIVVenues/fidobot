@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Fidobot.Utilities;
 
 namespace Fidobot.Services;
 
@@ -11,15 +12,18 @@ public class ThreadService {
 
     if (eatTime <= DateTime.UtcNow) {
       await thread.DeleteAsync();
-
-      // Remove db entry if it exists
-
+      DBHelper.RemoveIfExists(thread.Id);
       Console.Write("[ThreadService] Munching on #" + thread.Name + ", yummy !");
     } else {
-      // Save in db to eat later
+      DBHelper.SaveThreadToDB(thread.GuildId, thread.Id, eatTime);
     }
   }
 
-  // Method : SaveThread
-  // etc...
+  public static async void CheckThreads() {
+    foreach ((IGuildChannel, DateTime) thread in await DBHelper.GetThreads()) {
+      if (thread.Item2 <= DateTime.UtcNow) {
+        EatThread(thread.Item1, thread.Item2);
+      }
+    }
+  }
 }

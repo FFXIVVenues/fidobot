@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 namespace Fidobot;
 
 public class Program {
-  private static readonly DiscordSocketClient client = new();
+  public static readonly DiscordSocketClient client = new();
 
   public static async Task Main() {
     client.Ready += Client_Ready;
