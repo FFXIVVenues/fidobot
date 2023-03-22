@@ -1,7 +1,7 @@
 ﻿namespace Fidobot.Models;
 
 public class ThreadConfig {
-  public ulong GuildID;
-  public ulong ThreadID;
-  public long EatAt;
+  public ulong GuildID { get; set; }
+  public ulong ChannelID { get; set; }
+  public long EatTime { get; set; }
 }

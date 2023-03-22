@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Fidobot.Models;
 using LiteDB;
 
@@ -9,14 +9,14 @@ public static class DBHelper {
   private static readonly ILiteCollection<ThreadConfig> threads = db.GetCollection<ThreadConfig>();
   private static readonly ILiteCollection<ForumConfig> forums = db.GetCollection<ForumConfig>();
 
-  public static void SaveThreadToDB(ulong guildID, ulong threadID, DateTime eatAt) {
-    ThreadConfig threadConfig = new() {
+  public static void SaveThreadToDB(ulong guildID, ulong channelID, DateTime eatAt) {
+    ThreadConfig config = new() {
       GuildID = guildID,
-      ThreadID = threadID,
-      EatAt = new DateTimeOffset(eatAt).ToUnixTimeSeconds()
+      ChannelID = channelID,
+      EatTime = new DateTimeOffset(eatAt).ToUnixTimeSeconds()
     };
 
-    threads.Insert(threadConfig);
+    threads.Insert(config);
   }
 
   public static void RemoveIfExists(ulong threadID) {
