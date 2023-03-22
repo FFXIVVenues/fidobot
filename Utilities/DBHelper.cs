@@ -19,8 +19,8 @@ public static class DBHelper {
     threads.Insert(config);
   }
 
-  public static void RemoveIfExists(ulong threadID) {
-    threads.Delete((BsonValue)threadID);
+  public static void DeleteIfExists(ulong channelID) {
+    threads.DeleteMany(x => x.ChannelID == channelID);
   }
 
   public static async Task<List<(IGuildChannel, DateTime)>> GetThreads() {
