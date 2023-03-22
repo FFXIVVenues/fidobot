@@ -1,31 +1,30 @@
-﻿using Discord;
+using Discord;
 using Discord.WebSocket;
 using Fidobot.Controllers;
+using Fidobot.Utilities;
 using Microsoft.Extensions.Configuration;
 
 namespace Fidobot;
 
 public class Program {
-  public static readonly DiscordSocketClient client = new();
-
   public static async Task Main() {
-    client.Ready += Client_Ready;
-    client.SlashCommandExecuted += Client_SlashCommandExecuted;
-    client.Log += Log;
+    DiscordHelper.client.Ready += Client_Ready;
+    DiscordHelper.client.SlashCommandExecuted += Client_SlashCommandExecuted;
+    DiscordHelper.client.Log += Log;
 
     IConfigurationRoot? config = new ConfigurationBuilder()
       .AddUserSecrets<Program>(optional: true)
       .AddEnvironmentVariables("FIDO_TOKEN")
       .Build();
 
-    await client.LoginAsync(TokenType.Bot, config.GetSection("FIDO_TOKEN").Value);
-    await client.StartAsync();
+    await DiscordHelper.client.LoginAsync(TokenType.Bot, config.GetSection("FIDO_TOKEN").Value);
+    await DiscordHelper.client.StartAsync();
 
     await Task.Delay(-1);
   }
 
   private static async Task Client_Ready() {
-    await CommandsController.CreateCommands(client);
+    await CommandsController.CreateCommands();
   }
 
   private static Task Client_SlashCommandExecuted(SocketSlashCommand cmd) {

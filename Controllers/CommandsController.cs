@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Net;
 using Discord.WebSocket;
 using Fidobot.Services;
@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Fidobot.Controllers;
 
 public class CommandsController {
-  public static async Task CreateCommands(DiscordSocketClient client) {
+  public static async Task CreateCommands() {
     List<ChannelType> channels = new() { ChannelType.PublicThread, ChannelType.Forum };
 
     // Build eat command
@@ -38,8 +38,8 @@ public class CommandsController {
 
     // Create commands
     try {
-      await client.CreateGlobalApplicationCommandAsync(eatCmdBuilder.Build());
-      await client.CreateGlobalApplicationCommandAsync(donteatCmdbuilder.Build());
+      await DiscordHelper.client.CreateGlobalApplicationCommandAsync(eatCmdBuilder.Build());
+      await DiscordHelper.client.CreateGlobalApplicationCommandAsync(donteatCmdbuilder.Build());
     } catch (HttpException ex) {
       string json = JsonConvert.SerializeObject(ex.Errors, Formatting.Indented);
       Console.WriteLine(json);
