@@ -76,12 +76,12 @@ public class CommandsController {
       }
     }
 
-    if (ValidateEatArguments(timeType, timeValue, channel, eatExisting, eatFuture, cmd)) {
+    if (ValidateEatArguments(timeType, timeValue, ref channel, eatExisting, eatFuture, cmd)) {
       Eat(channel!, timeType, timeValue, eatExisting, eatFuture, cmd);
     }
   }
 
-  private static bool ValidateEatArguments(long timeType, long timeValue, IGuildChannel? channel, bool eatExisting, bool eatFuture, SocketSlashCommand cmd) {
+  private static bool ValidateEatArguments(long timeType, long timeValue, ref IGuildChannel? channel, bool eatExisting, bool eatFuture, SocketSlashCommand cmd) {
     // If time type is zero or not equal to predefined values, log and respond error message
     if (timeType == 0 || (timeType != 1 && timeType != 60 && timeType != (long)60 * 60 && timeType != (long)60 * 60 * 24)) {
       cmd.RespondAsync("An error occurred. timeType value wrong: " + timeType, null, false, true);
