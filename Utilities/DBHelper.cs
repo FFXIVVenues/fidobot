@@ -1,4 +1,4 @@
-using Discord;
+﻿using Discord;
 using Fidobot.Models;
 using LiteDB;
 
@@ -23,17 +23,32 @@ public static class DBHelper {
     threads.DeleteMany(x => x.ChannelID == channelID);
   }
 
-  public static async Task<List<(IGuildChannel, DateTime)>> GetThreads() {
-    List<(IGuildChannel, DateTime)> allThreads = new();
-    foreach (ThreadConfig threadConfig in threads.FindAll()) {
-      IGuild guild = Program.client.GetGuild(threadConfig.GuildID);
-      IGuildChannel channel = await guild.GetChannelAsync(threadConfig.ThreadID);
-      DateTime eatAt = DateTimeOffset.FromUnixTimeSeconds(threadConfig.EatAt).UtcDateTime;
-      allThreads.Add((channel, eatAt));
-    }
-    return allThreads;
+  public static async Task<(IGuildChannel, DateTime)?> GetThread(ulong channelID) {
+    ThreadConfig? config = threads.Find(x => x.ChannelID == channelID).FirstOrDefault();
+    return config == null ? null : await GetThread(config);
   }
 
-  // Method : SaveForumToDB
-  // etc...
+  private static async Task<(IGuildChannel, DateTime)?> GetThread(ThreadConfig config) {
+    IGuildChannel? channel = await DiscordHelper.GetChannel(config.GuildID, config.ChannelID);
+    if (channel == null) {
+      DeleteIfExists(config.ChannelID);
+      return null;
+    }
+
+    DateTime eatAt = DateTimeOffset.FromUnixTimeSeconds(config.EatTime).UtcDateTime;
+    return (channel, eatAt);
+  }
+
+  public static async Task<List<(IGuildChannel, DateTime)>> GetThreads() {
+    List<(IGuildChannel, DateTime)> allThreads = new();
+
+    foreach (ThreadConfig config in threads.FindAll()) {
+      (IGuildChannel, DateTime)? thread = await GetThread(config);
+      if (thread != null) {
+        allThreads.Add(((IGuildChannel, DateTime))thread);
+      }
+    }
+
+    return allThreads;
+  }
 }

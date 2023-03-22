@@ -1,8 +1,10 @@
-using Discord;
+﻿using Discord;
 using Discord.WebSocket;
 using Fidobot.Controllers;
+using Fidobot.Services;
 using Fidobot.Utilities;
 using Microsoft.Extensions.Configuration;
+using Timer = System.Timers.Timer;
 
 namespace Fidobot;
 
@@ -25,6 +27,10 @@ public class Program {
 
   private static async Task Client_Ready() {
     await CommandsController.CreateCommands();
+
+    Timer eatChecker = new(3 * 1000); // TODO: Make this value configurable
+    eatChecker.Elapsed += EatCheckerElapsed;
+    eatChecker.Enabled = true;
   }
 
   private static Task Client_SlashCommandExecuted(SocketSlashCommand cmd) {
@@ -43,5 +49,9 @@ public class Program {
   public static Task Log(LogMessage msg) {
     Console.WriteLine(msg.ToString());
     return Task.CompletedTask;
+  }
+
+  private static void EatCheckerElapsed(object? sender, System.Timers.ElapsedEventArgs e) {
+    ThreadService.CheckThreads();
   }
 }

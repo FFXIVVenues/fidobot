@@ -114,15 +114,31 @@ public class CommandsController {
     return true;
   }
 
-  private static void Eat(IGuildChannel channel, long timeType, long timeValue, bool eatExisting, bool eatFuture, SocketSlashCommand cmd) {
+  private static async void Eat(IGuildChannel channel, long timeType, long timeValue, bool eatExisting, bool eatFuture, SocketSlashCommand cmd) {
     TimeSpan eatIn = TimeSpan.FromSeconds(timeValue * timeType);
     DateTime eatTime = DateTime.UtcNow + eatIn;
 
     if (channel.GetChannelType() == ChannelType.PublicThread) { // If thread
-      ThreadService.EatThread(channel, eatTime);
-      cmd.RespondAsync("Will eat #" + channel.Name + " in " + eatIn.ToDynamicString() + ".", null, false, true);
+      (ThreadService.Result, DateTime?) res = await ThreadService.EatThread(channel, eatTime);
+      EatResponse(channel, eatIn, res, cmd);
     } else { // If Forum
       //TBD
+    }
+  }
+
+  private static async void EatResponse(IGuildChannel channel, TimeSpan eatIn, (ThreadService.Result, DateTime?) res, SocketSlashCommand cmd) {
+    switch (res.Item1) {
+      case ThreadService.Result.Success:
+        await cmd.RespondAsync("Will eat #" + channel.Name + " in " + eatIn.ToDynamicString() + ".", null, false, true);
+        break;
+      case ThreadService.Result.WrongChannelType:
+        await cmd.RespondAsync("ERROR: `/eat` can only be used on Forums or Threads.", null, false, true);
+        break;
+      case ThreadService.Result.Overwrote:
+        TimeSpan supposedToBeEatenIn = (DateTime)res.Item2! - DateTime.UtcNow;
+        await cmd.RespondAsync("This channel was already scheduled to be eaten in " + supposedToBeEatenIn.ToDynamicString() + ".\r\n" +
+          "Will eat #" + channel.Name + " in " + eatIn.ToDynamicString() + " instead.", null, false, true);
+        break;
     }
   }
 
