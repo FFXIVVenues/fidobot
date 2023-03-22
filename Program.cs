@@ -13,11 +13,12 @@ public class Program {
     client.SlashCommandExecuted += Client_SlashCommandExecuted;
     client.Log += Log;
 
-    IConfigurationBuilder? builder = new ConfigurationBuilder().AddUserSecrets<Program>();
-    IConfigurationRoot? config = builder.Build();
-    string token = config.GetSection("token").Value;
+    IConfigurationRoot? config = new ConfigurationBuilder()
+      .AddUserSecrets<Program>(optional: true)
+      .AddEnvironmentVariables("FIDO_TOKEN")
+      .Build();
 
-    await client.LoginAsync(TokenType.Bot, token);
+    await client.LoginAsync(TokenType.Bot, config.GetSection("FIDO_TOKEN").Value);
     await client.StartAsync();
 
     await Task.Delay(-1);
