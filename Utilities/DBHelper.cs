@@ -1,19 +1,19 @@
-﻿using Discord;
 using Fidobot.Models;
+using Fidobot.Models.DB;
 using LiteDB;
 
 namespace Fidobot.Utilities;
 
 public static class DBHelper {
   private static readonly LiteDatabase db = new(@"./main.db");
-  private static readonly ILiteCollection<ThreadConfig> threads = db.GetCollection<ThreadConfig>();
-  private static readonly ILiteCollection<ForumConfig> forums = db.GetCollection<ForumConfig>();
+  private static readonly ILiteCollection<DBThread> threads = db.GetCollection<DBThread>();
+  private static readonly ILiteCollection<DBForum> forums = db.GetCollection<DBForum>();
 
   public static void SaveThreadToDB(ulong guildID, ulong channelID, DateTime eatAt) {
-    ThreadConfig config = new() {
+    DBThread config = new() {
       GuildID = guildID,
       ChannelID = channelID,
-      EatTime = new DateTimeOffset(eatAt).ToUnixTimeSeconds()
+      EatTimestamp = new DateTimeOffset(eatAt).ToUnixTimeSeconds()
     };
 
     threads.Insert(config);
@@ -21,31 +21,27 @@ public static class DBHelper {
 
   public static void DeleteIfExists(ulong channelID) {
     threads.DeleteMany(x => x.ChannelID == channelID);
+    forums.DeleteMany(x => x.ChannelID == channelID);
   }
 
-  public static async Task<(IGuildChannel, DateTime)?> GetThread(ulong channelID) {
-    ThreadConfig? config = threads.Find(x => x.ChannelID == channelID).FirstOrDefault();
-    return config == null ? null : await GetThread(config);
-  }
+  public static async Task<FidoThread?> GetThread(ulong channelID) {
+    DBThread? config = threads.Find(x => x.ChannelID == channelID).FirstOrDefault();
 
-  private static async Task<(IGuildChannel, DateTime)?> GetThread(ThreadConfig config) {
-    IGuildChannel? channel = await DiscordHelper.GetChannel(config.GuildID, config.ChannelID);
-    if (channel == null) {
-      DeleteIfExists(config.ChannelID);
+    if (config == null) {
       return null;
     }
 
-    DateTime eatAt = DateTimeOffset.FromUnixTimeSeconds(config.EatTime).UtcDateTime;
-    return (channel, eatAt);
+    FidoThread? thread = await FidoThread.CreateAsync(config);
+    return thread ?? null;
   }
 
-  public static async Task<List<(IGuildChannel, DateTime)>> GetThreads() {
-    List<(IGuildChannel, DateTime)> allThreads = new();
+  public static async Task<List<FidoThread>> GetThreads() {
+    List<FidoThread> allThreads = new();
 
-    foreach (ThreadConfig config in threads.FindAll()) {
-      (IGuildChannel, DateTime)? thread = await GetThread(config);
+    foreach (DBThread config in threads.FindAll()) {
+      FidoThread? thread = await FidoThread.CreateAsync(config);
       if (thread != null) {
-        allThreads.Add(((IGuildChannel, DateTime))thread);
+        allThreads.Add(thread);
       }
     }
 

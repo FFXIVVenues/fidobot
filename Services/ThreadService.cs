@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Fidobot.Models;
 using Fidobot.Utilities;
 
 namespace Fidobot.Services;
@@ -11,23 +12,27 @@ public class ThreadService {
   }
 
   public static async void CheckThreads() {
-    foreach ((IGuildChannel, DateTime) thread in await DBHelper.GetThreads()) {
-      if (thread.Item2 <= DateTime.UtcNow) {
-        await EatThread(thread.Item1, thread.Item2);
+    foreach (FidoThread thread in await DBHelper.GetThreads()) {
+      if (thread.EatDT <= DateTime.UtcNow) {
+        await EatThread(thread);
       }
     }
   }
 
-  public static async Task<(Result, DateTime?)> EatThread(IGuildChannel thread, DateTime eatTime) {
-    if (thread.GetChannelType() != ChannelType.PublicThread) {
-      Console.WriteLine("[ThreadService] ERROR: Wrong channel type in EatThread: " + thread.GetChannelType());
+  public static async Task<(Result, DateTime?)> EatThread(IGuildChannel threadChannel, DateTime eatDT) {
+    if (threadChannel.GetChannelType() != ChannelType.PublicThread) {
+      Console.WriteLine("[ThreadService] ERROR: Wrong channel type in EatThread: " + threadChannel.GetChannelType());
       return (Result.WrongChannelType, null);
     }
 
-    if (eatTime <= DateTime.UtcNow) {
-      return (await Eat(thread), null);
+    if (eatDT <= DateTime.UtcNow) {
+      return (await Eat(threadChannel), null);
     }
-    return await SaveThread(thread, eatTime);
+    return await SaveThread(threadChannel, eatDT);
+  }
+
+  private static async Task<(Result, DateTime?)> EatThread(FidoThread thread) {
+    return await EatThread(thread.Channel, thread.EatDT);
   }
 
   private static async Task<Result> Eat(IGuildChannel thread) {
@@ -38,17 +43,17 @@ public class ThreadService {
     return Result.Success;
   }
 
-  private static async Task<(Result, DateTime?)> SaveThread(IGuildChannel thread, DateTime eatTime) {
-    (IGuildChannel, DateTime)? dbThread = await DBHelper.GetThread(thread.Id);
+  private static async Task<(Result, DateTime?)> SaveThread(IGuildChannel threadChannel, DateTime eatTime) {
+    FidoThread? thread = await DBHelper.GetThread(threadChannel.Id);
     Result res = Result.Success;
     DateTime? overwrote = null;
 
-    if (dbThread != null) {
-      DBHelper.DeleteIfExists(thread.Id);
+    if (thread != null) {
+      DBHelper.DeleteIfExists(threadChannel.Id);
       res = Result.Overwrote;
-      overwrote = dbThread.Value.Item2;
+      overwrote = thread.EatDT;
     }
-    DBHelper.SaveThreadToDB(thread.GuildId, thread.Id, eatTime);
+    DBHelper.SaveThreadToDB(threadChannel.GuildId, threadChannel.Id, eatTime);
 
     return (res, overwrote);
   }
