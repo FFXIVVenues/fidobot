@@ -136,7 +136,7 @@ public class CommandsController {
         break;
       case ThreadService.Result.Overwrote:
         TimeSpan supposedToBeEatenIn = (DateTime)res.Item2! - DateTime.UtcNow;
-        await cmd.RespondAsync("This channel was already scheduled to be eaten in " + supposedToBeEatenIn.ToDynamicString() + ".\r\n" +
+        await cmd.RespondAsync("This thread was already scheduled to be eaten in " + supposedToBeEatenIn.ToDynamicString() + ".\r\n" +
           "Will eat #" + channel.Name + " in " + eatIn.ToDynamicString() + " instead.", null, false, true);
         break;
     }
