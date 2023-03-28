@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Fidobot.Models;
 using Fidobot.Utilities;
 
@@ -8,7 +8,8 @@ public class ThreadService {
   public enum Result {
     Success,
     WrongChannelType,
-    Overwrote
+    Overwrote,
+    ForumOverride
   }
 
   public static async void CheckThreads() {
@@ -21,7 +22,7 @@ public class ThreadService {
 
   public static async Task<(Result, DateTime?)> EatThread(IGuildChannel threadChannel, DateTime eatDT) {
     if (threadChannel.GetChannelType() != ChannelType.PublicThread) {
-      Console.WriteLine("[ThreadService] ERROR: Wrong channel type in EatThread: " + threadChannel.GetChannelType());
+      Console.Error.WriteLine("[ThreadService] ERROR: Wrong channel type in EatThread: " + threadChannel.GetChannelType());
       return (Result.WrongChannelType, null);
     }
 
@@ -53,8 +54,14 @@ public class ThreadService {
       res = Result.Overwrote;
       overwrote = thread.EatDT;
     }
-    DBHelper.SaveThreadToDB(threadChannel.GuildId, threadChannel.Id, eatTime);
 
+    FidoForum? forum = await DBHelper.GetForum(((IThreadChannel)threadChannel).GetParentForum().Id);
+    if (forum != null) {
+      res = Result.ForumOverride;
+      overwrote = (threadChannel.CreatedAt + forum.EatOffset).UtcDateTime;
+    }
+
+    DBHelper.SaveThreadToDB(threadChannel.GuildId, threadChannel.Id, eatTime);
     return (res, overwrote);
   }
 }

@@ -120,13 +120,13 @@ public class CommandsController {
 
     if (channel.GetChannelType() == ChannelType.PublicThread) { // If thread
       (ThreadService.Result, DateTime?) res = await ThreadService.EatThread(channel, eatTime);
-      EatResponse(channel, eatIn, res, cmd);
+      EatThreadResponse(channel, eatIn, res, cmd);
     } else { // If Forum
       //TBD
     }
   }
 
-  private static async void EatResponse(IGuildChannel channel, TimeSpan eatIn, (ThreadService.Result, DateTime?) res, SocketSlashCommand cmd) {
+  private static async void EatThreadResponse(IGuildChannel channel, TimeSpan eatIn, (ThreadService.Result, DateTime?) res, SocketSlashCommand cmd) {
     switch (res.Item1) {
       case ThreadService.Result.Success:
         await cmd.RespondAsync("Will eat #" + channel.Name + " in " + eatIn.ToDynamicString() + ".", null, false, true);
@@ -135,8 +135,14 @@ public class CommandsController {
         await cmd.RespondAsync("ERROR: `/eat` can only be used on Forums or Threads.", null, false, true);
         break;
       case ThreadService.Result.Overwrote:
-        TimeSpan supposedToBeEatenIn = (DateTime)res.Item2! - DateTime.UtcNow;
-        await cmd.RespondAsync("This thread was already scheduled to be eaten in " + supposedToBeEatenIn.ToDynamicString() + ".\r\n" +
+        TimeSpan overwroteETA = (DateTime)res.Item2! - DateTime.UtcNow;
+        await cmd.RespondAsync("This thread was already scheduled to be eaten in " + overwroteETA.ToDynamicString() + ".\r\n" +
+          "Will eat #" + channel.Name + " in " + eatIn.ToDynamicString() + " instead.", null, false, true);
+        break;
+      case ThreadService.Result.ForumOverride:
+        TimeSpan forumOverrideETA = (DateTime)res.Item2! - DateTime.UtcNow;
+        await cmd.RespondAsync("This thread is in a forum managed by Fido.\r\n" +
+          "The forum configuration made it so that this thread was scheduled to be eatin in " + forumOverrideETA.ToDynamicString() + ".\r\n" +
           "Will eat #" + channel.Name + " in " + eatIn.ToDynamicString() + " instead.", null, false, true);
         break;
     }
