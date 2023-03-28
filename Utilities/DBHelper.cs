@@ -1,4 +1,4 @@
-using Fidobot.Models;
+﻿using Fidobot.Models;
 using Fidobot.Models.DB;
 using LiteDB;
 
@@ -29,6 +29,10 @@ public static class DBHelper {
     };
 
     forums.Insert(config);
+  }
+
+  public static bool ThreadExists(ulong channelID) {
+    return threads.Exists(x => x.ChannelID == channelID);
   }
 
   public static void DeleteIfExists(ulong channelID) {

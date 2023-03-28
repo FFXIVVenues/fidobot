@@ -1,4 +1,4 @@
-namespace Fidobot.Models.DB;
+﻿namespace Fidobot.Models.DB;
 
 public class DBForum
 {
