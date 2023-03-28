@@ -53,5 +53,6 @@ public class Program {
 
   private static void EatCheckerElapsed(object? sender, System.Timers.ElapsedEventArgs e) {
     ThreadService.CheckThreads();
+    ForumService.CheckForums();
   }
 }
