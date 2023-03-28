@@ -1,6 +1,7 @@
 using Discord;
 using Discord.Net;
 using Discord.WebSocket;
+using Fidobot.Models;
 using Fidobot.Services;
 using Fidobot.Utilities;
 using Newtonsoft.Json;
@@ -122,7 +123,8 @@ public class CommandsController {
       (ThreadService.Result, DateTime?) res = await ThreadService.EatThread(channel, eatTime);
       EatThreadResponse(channel, eatIn, res, cmd);
     } else { // If Forum
-      //TBD
+      (ForumService.Result, TimeSpan?) res = await ForumService.EatForum(channel, eatIn, eatExisting, eatFuture);
+      EatForumResponse(channel, eatIn, eatExisting, eatFuture, res, cmd);
     }
   }
 
@@ -148,7 +150,22 @@ public class CommandsController {
     }
   }
 
-  public static void DontEatHandler(SocketSlashCommand cmd) { // Content is currently testing, ignore
-    cmd.RespondAsync("Will not eat this channel.");
+  private static async void EatForumResponse(IGuildChannel channel, TimeSpan eatIn, bool eatExisting, bool eatFuture, (ForumService.Result, TimeSpan?) res, SocketSlashCommand cmd) {
+    switch (res.Item1) {
+      case ForumService.Result.Success:
+        await cmd.RespondAsync($"#{channel.Name} configured to eat threads {eatIn.ToDynamicString()} after their creation.\r\n" +
+          $"Eating existing threads with the same rules : ${(eatExisting ? "Yes" : "No")}" +
+          $"Eating future threads with the same rules : ${(eatFuture ? "Yes" : "No")}", null, false, true);
+        break;
+      case ForumService.Result.WrongChannelType:
+        await cmd.RespondAsync("ERROR: `/eat` can only be used on Forums or Threads.", null, false, true);
+        break;
+      case ForumService.Result.Overwrote:
+        TimeSpan overwroteETA = (TimeSpan)res.Item2!;
+        await cmd.RespondAsync($"This forum was already configured to eat threads {overwroteETA.ToDynamicString()} after their creation.\r\n" +
+          $"Channels will now be eaten {eatIn.ToDynamicString()} after their creation date instead.", null, false, true);
+        break;
+    }
+  }
   }
 }
