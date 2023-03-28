@@ -20,7 +20,7 @@ public class ThreadService {
     }
   }
 
-  public static async Task<(Result, DateTime?)> EatThread(IGuildChannel threadChannel, DateTime eatDT) {
+  public static async Task<(Result, DateTime?)> EatThread(IGuildChannel threadChannel, DateTime eatDT, bool store = true) {
     if (threadChannel.GetChannelType() != ChannelType.PublicThread) {
       Console.Error.WriteLine("[ThreadService] ERROR: Wrong channel type in EatThread: " + threadChannel.GetChannelType());
       return (Result.WrongChannelType, null);
@@ -29,7 +29,10 @@ public class ThreadService {
     if (eatDT <= DateTime.UtcNow) {
       return (await Eat(threadChannel), null);
     }
-    return await SaveThread(threadChannel, eatDT);
+    if (store) {
+      return await SaveThread(threadChannel, eatDT);
+    }
+    return (Result.Success, null);
   }
 
   private static async Task<(Result, DateTime?)> EatThread(FidoThread thread) {
