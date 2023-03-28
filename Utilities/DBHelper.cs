@@ -19,6 +19,18 @@ public static class DBHelper {
     threads.Insert(config);
   }
 
+  public static void SaveForumToDB(ulong guildID, ulong channelID, bool eatExisting, TimeSpan eatOffset) {
+    DBForum config = new() {
+      GuildID = guildID,
+      ChannelID = channelID,
+      StartedTimestamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds(),
+      EatExisting = eatExisting,
+      EatOffset = (ulong)eatOffset.TotalSeconds
+    };
+
+    forums.Insert(config);
+  }
+
   public static void DeleteIfExists(ulong channelID) {
     threads.DeleteMany(x => x.ChannelID == channelID);
     forums.DeleteMany(x => x.ChannelID == channelID);
@@ -46,5 +58,29 @@ public static class DBHelper {
     }
 
     return allThreads;
+  }
+
+  public static async Task<FidoForum?> GetForum(ulong forumID) {
+    DBForum? config = forums.Find(x => x.ChannelID == forumID).FirstOrDefault();
+
+    if (config == null) {
+      return null;
+    }
+
+    FidoForum? forum = await FidoForum.CreateAsync(config);
+    return forum ?? null;
+  }
+
+  public static async Task<List<FidoForum>> GetForums() {
+    List<FidoForum> allForums = new();
+
+    foreach (DBForum config in forums.FindAll()) {
+      FidoForum? forum = await FidoForum.CreateAsync(config);
+      if (forum != null) {
+        allForums.Add(forum);
+      }
+    }
+
+    return allForums;
   }
 }
