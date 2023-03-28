@@ -1,4 +1,4 @@
-using Discord;
+﻿using Discord;
 using Fidobot.Models;
 using Fidobot.Utilities;
 

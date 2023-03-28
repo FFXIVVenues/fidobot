@@ -5,10 +5,10 @@ using Fidobot.Utilities;
 namespace Fidobot.Models;
 
 public class FidoThread {
-  public IGuildChannel Channel;
+  public IThreadChannel Channel;
   public DateTime EatDT;
 
-  private FidoThread(IGuildChannel channel, DateTime eatDT) {
+  private FidoThread(IThreadChannel channel, DateTime eatDT) {
     Channel = channel;
     EatDT = eatDT;
   }
@@ -19,7 +19,11 @@ public class FidoThread {
       return null;
     }
 
+    if (channel is not IThreadChannel thread) {
+      return null;
+    }
+
     DateTime eatDT = DateTimeOffset.FromUnixTimeSeconds(dbThread.EatTimestamp).UtcDateTime;
-    return new FidoThread(channel, eatDT);
+    return new FidoThread(thread, eatDT);
   }
 }
