@@ -108,13 +108,13 @@ public class CommandsController {
 
     // If eatExisting is true but channel isn't a forum, respond with an error message
     if (eatExisting && channel.GetChannelType() != ChannelType.Forum) {
-      cmd.RespondAsync("Eat existing can only be enabled on forum channels.");
+      cmd.RespondAsync("Eat existing can only be enabled on forum channels.", null, false, true);
       return false;
     }
 
     // If eatFuture is true but channel isn't a forum, respond with an error message
     if (eatFuture && channel.GetChannelType() != ChannelType.Forum) {
-      cmd.RespondAsync("Eat Future can only be enabled on forum channels.");
+      cmd.RespondAsync("Eat Future can only be enabled on forum channels.", null, false, true);
       return false;
     }
 
@@ -174,9 +174,35 @@ public class CommandsController {
     }
   }
 
+  public static async void DontEatHandler(SocketSlashCommand cmd) {
+    IGuildChannel? channel = cmd.Data.Options.FirstOrDefault()?.Value as IGuildChannel;
+    channel ??= (IGuildChannel)cmd.Channel;
+
+    if (channel.GetChannelType() == ChannelType.PublicThread) { // If Thread
+      ThreadService.Result res = ThreadService.DontEat(channel);
+      if (res == ThreadService.Result.Success) {
+        await cmd.RespondAsync("**SUCCESS:** Okaaayyy... I won't eat that thread.", null, false, true);
+      } else {
+        await cmd.RespondAsync("I was supposed to eat that thread ? It wasn't on the menu.\r\n" +
+          "**ERROR:** Thread not found in database.", null, false, true);
+      }
+    } else if (channel.GetChannelType() == ChannelType.Forum) { // If Forum
+      ForumService.Result res = ForumService.DontEat(channel);
+      if (res == ForumService.Result.Success) {
+        await cmd.RespondAsync("**SUCCESS:** Okaaayyy... I won't eat the threads in this forum.", null, false, true);
+      } else {
+        await cmd.RespondAsync("I was supposed to eat threads in this forum ? They weren't on the menu.\r\n" +
+          "**ERROR:** Forum not found in database.", null, false, true);
+      }
+    } else { // If not thread or forum
+      await cmd.RespondAsync("I only like threads and forums.\r\n" +
+        "**ERROR:** Wrong channel type. Fido can only be used on forums and threads.", null, false, true);
+    }
+  }
+
   public static async void SniffHandler(SocketSlashCommand cmd) {
     if (cmd.GuildId == null) {
-      await cmd.RespondAsync("This method can only be used in a Discord Server.");
+      await cmd.RespondAsync("This method can only be used in a Discord Server.", null, false, true);
       return;
     }
 

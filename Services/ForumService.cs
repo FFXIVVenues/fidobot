@@ -8,7 +8,8 @@ public class ForumService {
   public enum Result {
     Success,
     WrongChannelType,
-    Overwrote
+    Overwrote,
+    NotFound
   }
 
   public static async void CheckForums() {
@@ -61,5 +62,13 @@ public class ForumService {
 
     DBHelper.SaveForumToDB(forumChannel.GuildId, forumChannel.Id, eatExisting, eatOffset);
     return (res, overwrote);
+  }
+
+  public static Result DontEat(IGuildChannel channel) {
+    if (!DBHelper.ForumExists(channel.Id)) {
+      return Result.NotFound;
+    }
+    DBHelper.DeleteIfExists(channel.Id);
+    return Result.Success;
   }
 }

@@ -9,7 +9,8 @@ public class ThreadService {
     Success,
     WrongChannelType,
     Overwrote,
-    ForumOverride
+    ForumOverride,
+    NotFound
   }
 
   public static async void CheckThreads() {
@@ -66,5 +67,13 @@ public class ThreadService {
 
     DBHelper.SaveThreadToDB(threadChannel.GuildId, threadChannel.Id, eatTime);
     return (res, overwrote);
+  }
+
+  public static Result DontEat(IGuildChannel channel) {
+    if (!DBHelper.ThreadExists(channel.Id)) {
+      return Result.NotFound;
+    }
+    DBHelper.DeleteIfExists(channel.Id);
+    return Result.Success;
   }
 }

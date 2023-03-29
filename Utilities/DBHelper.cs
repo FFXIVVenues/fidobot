@@ -35,6 +35,10 @@ public static class DBHelper {
     return threads.Exists(x => x.ChannelID == channelID);
   }
 
+  public static bool ForumExists(ulong channelID) {
+    return forums.Exists(x => x.ChannelID == channelID);
+  }
+
   public static void DeleteIfExists(ulong channelID) {
     threads.DeleteMany(x => x.ChannelID == channelID);
     forums.DeleteMany(x => x.ChannelID == channelID);
