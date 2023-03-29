@@ -32,4 +32,25 @@ public static class DiscordHelper {
 
     return channel;
   }
+
+  private static bool IsAdmin(SocketGuildUser user) => user.GuildPermissions.Administrator;
+
+  public static bool CanManageThreads(SocketGuildUser user, IGuildChannel channel) {
+    if (IsAdmin(user)) {
+      return true;
+    }
+
+    return channel.GetChannelType() switch {
+      ChannelType.Forum => user.GuildPermissions.ManageThreads,
+      ChannelType.PublicThread => user.GetPermissions(channel).ManageThreads,
+      _ => false
+    };
+  }
+
+  public static bool CanManageThreads(SocketGuildUser user) {
+    if (IsAdmin(user)) {
+      return true;
+    }
+    return user.GuildPermissions.ManageThreads;
+  }
 }

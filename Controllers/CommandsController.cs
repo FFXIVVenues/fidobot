@@ -40,7 +40,7 @@ public class CommandsController {
     // Build sniff command
     SlashCommandBuilder sniffCmdBuilder = new();
     sniffCmdBuilder.WithName("sniff");
-    sniffCmdBuilder.WithDescription("List configured forums and threads.");
+    sniffCmdBuilder.WithDescription("Lists configured forums and threads.");
 
     // Create commands
     try {
@@ -55,7 +55,7 @@ public class CommandsController {
     Console.WriteLine("[CommandsController] Commands created successfully.");
   }
 
-  public static void EatHandler(SocketSlashCommand cmd) {
+  public static async void EatHandler(SocketSlashCommand cmd) {
     long timeType = 0;
     long timeValue = 0;
     IGuildChannel? channel = null;
@@ -83,9 +83,20 @@ public class CommandsController {
       }
     }
 
-    if (ValidateEatArguments(timeType, timeValue, ref channel, eatExisting, eatFuture, cmd)) {
-      Eat(channel!, timeType, timeValue, eatExisting, eatFuture, cmd);
+    if (!ValidateEatArguments(timeType, timeValue, ref channel, eatExisting, eatFuture, cmd)) {
+      return;
     }
+
+    if (!DiscordHelper.CanManageThreads((SocketGuildUser)cmd.User, channel!)) {
+      if (channel.GetChannelType() == ChannelType.Forum) {
+        await cmd.RespondAsync("**ERROR:** You don't have the necessary permissions on this server to execute that command.", null, false, true);
+      } else if (channel.GetChannelType() == ChannelType.PublicThread) {
+        await cmd.RespondAsync("**ERROR:** You don't have the necessary permissions on this channel to execute that command.", null, false, true);
+      }
+      return;
+    }
+
+    Eat(channel!, timeType, timeValue, eatExisting, eatFuture, cmd);
   }
 
   private static bool ValidateEatArguments(long timeType, long timeValue, ref IGuildChannel? channel, bool eatExisting, bool eatFuture, SocketSlashCommand cmd) {
@@ -178,6 +189,15 @@ public class CommandsController {
     IGuildChannel? channel = cmd.Data.Options.FirstOrDefault()?.Value as IGuildChannel;
     channel ??= (IGuildChannel)cmd.Channel;
 
+    if (!DiscordHelper.CanManageThreads((SocketGuildUser)cmd.User, channel)) {
+      if (channel.GetChannelType() == ChannelType.Forum) {
+        await cmd.RespondAsync("**ERROR:** You don't have the necessary permissions on this server to execute that command.", null, false, true);
+      } else if (channel.GetChannelType() == ChannelType.PublicThread) {
+        await cmd.RespondAsync("**ERROR:** You don't have the necessary permissions on this channel to execute that command.", null, false, true);
+      }
+      return;
+    }
+
     if (channel.GetChannelType() == ChannelType.PublicThread) { // If Thread
       ThreadService.Result res = ThreadService.DontEat(channel);
       if (res == ThreadService.Result.Success) {
@@ -203,6 +223,11 @@ public class CommandsController {
   public static async void SniffHandler(SocketSlashCommand cmd) {
     if (cmd.GuildId == null) {
       await cmd.RespondAsync("This method can only be used in a Discord Server.", null, false, true);
+      return;
+    }
+
+    if (!DiscordHelper.CanManageThreads((SocketGuildUser)cmd.User)) {
+      await cmd.RespondAsync("**ERROR:** Only administrators can use this command.", null, false, true);
       return;
     }
 
