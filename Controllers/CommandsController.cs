@@ -32,15 +32,21 @@ public class CommandsController {
     eatCmdBuilder.AddOption("eat-future", ApplicationCommandOptionType.Boolean, "(Forum only) Should Fido eat future threads with given time options ?", false);
 
     // Build donteat command
-    SlashCommandBuilder donteatCmdbuilder = new();
-    donteatCmdbuilder.WithName("donteat");
-    donteatCmdbuilder.WithDescription("Disables fidobot from eating this channel.");
-    donteatCmdbuilder.AddOption("channel", ApplicationCommandOptionType.Channel, "Specify a thread or forum.", false, null, false, null, null, null, channels);
+    SlashCommandBuilder donteatCmdBuilder = new();
+    donteatCmdBuilder.WithName("donteat");
+    donteatCmdBuilder.WithDescription("Disables fidobot from eating this channel.");
+    donteatCmdBuilder.AddOption("channel", ApplicationCommandOptionType.Channel, "Specify a thread or forum.", false, null, false, null, null, null, channels);
+
+    // Build sniff command
+    SlashCommandBuilder sniffCmdBuilder = new();
+    sniffCmdBuilder.WithName("sniff");
+    sniffCmdBuilder.WithDescription("List configured forums and threads.");
 
     // Create commands
     try {
       await DiscordHelper.client.CreateGlobalApplicationCommandAsync(eatCmdBuilder.Build());
-      await DiscordHelper.client.CreateGlobalApplicationCommandAsync(donteatCmdbuilder.Build());
+      await DiscordHelper.client.CreateGlobalApplicationCommandAsync(donteatCmdBuilder.Build());
+      await DiscordHelper.client.CreateGlobalApplicationCommandAsync(sniffCmdBuilder.Build());
     } catch (HttpException ex) {
       string json = JsonConvert.SerializeObject(ex.Errors, Formatting.Indented);
       Console.WriteLine(json);
@@ -167,5 +173,25 @@ public class CommandsController {
         break;
     }
   }
+
+  public static async void SniffHandler(SocketSlashCommand cmd) {
+    if (cmd.GuildId == null) {
+      await cmd.RespondAsync("This method can only be used in a Discord Server.");
+      return;
+    }
+
+    string final = "*sniff sniff*... I found these forums :\r\n";
+    foreach (FidoForum forum in await SniffService.GetForums((ulong)cmd.GuildId)) {
+      final += $"- '#{forum.Channel.Name}' | Eat threads {forum.EatOffset.ToDynamicString()} after creation date | Eat Existing; {forum.EatExisting} | Started; {forum.Started}\r\n";
+    }
+
+    final += "\r\n*sniff sniff*... Oh and these threads too :\r\n";
+    foreach (FidoThread thread in await SniffService.GetThreads((ulong)cmd.GuildId)) {
+      TimeSpan eatIn = thread.EatDT - DateTime.UtcNow;
+      final += $"- '#{thread.Channel.Name}' | Eat in {eatIn.ToDynamicString()}\r\n";
+    }
+    final += "\r\nMy stomach is already gurgling...";
+
+    await cmd.RespondAsync(final, null, false, true);
   }
 }

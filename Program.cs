@@ -41,6 +41,9 @@ public class Program {
       case "donteat":
         CommandsController.DontEatHandler(cmd);
         break;
+      case "sniff":
+        CommandsController.SniffHandler(cmd);
+        break;
     }
 
     return Task.CompletedTask;

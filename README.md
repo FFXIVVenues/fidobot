@@ -10,3 +10,4 @@ A Discord bot to clean
 	- Eat Future (Forums only) : Yes or no choice to decide whether Fido should be enabled for future threads created in this forum.
 - `/donteat` : Disables Fido for the current (or specified) thread or forum. This command overrides forum configuration if fido is enabled on it.
 	- Channel (Defaults to current if used in a thread) : Specify a thread of forum.
+- `/sniff` : Lists configured forums and threads on this server.
