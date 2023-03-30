@@ -224,15 +224,26 @@ public class CommandsController {
       return;
     }
 
-    string final = Locale.Get("output-sniff-forums-intro");
-    foreach (FidoForum forum in await SniffService.GetForums((ulong)cmd.GuildId)) {
-      final += Locale.Get("output-sniff-forums-entry", forum.Channel.Name, forum.EatOffset.ToDynamicString(), forum.EatExisting, forum.Started);
+    string final = "";
+    List<FidoForum> forums = await SniffService.GetForums((ulong)cmd.GuildId);
+    if (forums.Count > 0) {
+      final += Locale.Get("output-sniff-forums-intro");
+      foreach (FidoForum forum in forums) {
+        final += Locale.Get("output-sniff-forums-entry", forum.Channel.Name, forum.EatOffset.ToDynamicString(), forum.EatExisting, forum.Started);
+      }
+    } else {
+      final += Locale.Get("output-sniff-forums-none");
     }
 
-    final += Locale.Get("output-sniff-threads-intro");
-    foreach (FidoThread thread in await SniffService.GetThreads((ulong)cmd.GuildId)) {
-      TimeSpan eatIn = thread.EatDT - DateTime.UtcNow;
-      final += Locale.Get("output-sniff-threads-entry", thread.Channel.Name, eatIn.ToDynamicString());
+    List<FidoThread> threads = await SniffService.GetThreads((ulong)cmd.GuildId);
+    if (threads.Count > 0) {
+      final += Locale.Get("output-sniff-threads-intro");
+      foreach (FidoThread thread in threads) {
+        TimeSpan eatIn = thread.EatDT - DateTime.UtcNow;
+        final += Locale.Get("output-sniff-threads-entry", thread.Channel.Name, eatIn.ToDynamicString());
+      }
+    } else {
+      final += Locale.Get("output-sniff-threads-none");
     }
 
     final += Locale.Get("output-sniff-outro");
