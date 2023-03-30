@@ -62,6 +62,8 @@ public static class DBHelper {
       FidoThread? thread = await FidoThread.CreateAsync(config);
       if (thread != null) {
         allThreads.Add(thread);
+      } else {
+        DeleteIfExists(config.ChannelID);
       }
     }
 
@@ -86,6 +88,8 @@ public static class DBHelper {
       FidoForum? forum = await FidoForum.CreateAsync(config);
       if (forum != null) {
         allForums.Add(forum);
+      } else {
+        DeleteIfExists(config.ChannelID);
       }
     }
 
