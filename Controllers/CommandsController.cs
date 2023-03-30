@@ -108,7 +108,7 @@ public class CommandsController {
     }
 
     // If time value is wrong, respond with an error message
-    if (timeValue <= 0) {
+    if (timeValue <= 0 || (timeValue * timeType) > TimeSpan.MaxValue.TotalSeconds) {
       cmd.RespondAsync(Locale.Get("output-timevalue-invalid", timeValue), null, false, true);
       return false;
     }
