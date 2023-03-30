@@ -50,6 +50,8 @@ public class Locale {
     { "output-donteat-wrongchanneltype", "**ERROR:** `/donteat` can only be used on Forums or Threads. I'm a picky eater." },
     { "output-donteat-thread-success", "Okaaayyy... I won't eat that thread." },
     { "output-donteat-thread-notfound", "Was I supposed to eat that thread ? It wasn't on my feeding schedule..." },
+    { "output-donteat-thread-backtoforum", "Okaaayyy... I will only eat that thread in {0} now because it is in a forum that is on my feeding schedule." },
+    { "output-donteat-thread-notfoundbutinforum", "Was I supposed to eat that thread outside of its forum feeding schedule which is in {0} ? It wasn't on my feeding schedule..." },
     { "output-donteat-forum-success", "Okaaayyy... I won't eat the threads in this forum." },
     { "output-donteat-forum-notfound", "Was I supposed to eat the threads in this forum ? They weren't on my feeding schedule..." },
 

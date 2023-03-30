@@ -10,7 +10,9 @@ public class ThreadService {
     WrongChannelType,
     Overwrote,
     ForumOverride,
-    NotFound
+    NotFound,
+    NotFoundButInForum,
+    BackToForum
   }
 
   public static async void CheckThreads() {
@@ -68,11 +70,23 @@ public class ThreadService {
     return (res, overwrote);
   }
 
-  public static Result DontEat(IGuildChannel channel) {
+  public static async Task<(Result, TimeSpan?)> DontEat(IGuildChannel channel) {
+    Result res = Result.Success;
+    bool exists = true;
+    TimeSpan? eatIn = null;
+
     if (!DBHelper.ThreadExists(channel.Id)) {
-      return Result.NotFound;
+      res = Result.NotFound;
+      exists = false;
     }
+
+    FidoForum? forum = await DBHelper.GetForum(((IThreadChannel)channel).GetParentForum().Id);
+    if (forum != null) {
+      res = exists ? Result.BackToForum : Result.NotFoundButInForum;
+      eatIn = channel.CreatedAt.UtcDateTime + forum.EatOffset - DateTime.UtcNow;
+    }
+
     DBHelper.DeleteIfExists(channel.Id);
-    return Result.Success;
+    return (res, eatIn);
   }
 }

@@ -195,11 +195,22 @@ public class CommandsController {
     }
 
     if (channel.GetChannelType() == ChannelType.PublicThread) { // If Thread
-      ThreadService.Result res = ThreadService.DontEat(channel);
-      if (res == ThreadService.Result.Success) {
-        await cmd.RespondAsync(Locale.Get("output-donteat-thread-success"), null, false, true);
-      } else {
-        await cmd.RespondAsync(Locale.Get("output-donteat-thread-notfound"), null, false, true);
+      (ThreadService.Result, TimeSpan?) res = await ThreadService.DontEat(channel);
+      switch (res.Item1) {
+        case ThreadService.Result.Success:
+          await cmd.RespondAsync(Locale.Get("output-donteat-thread-success"), null, false, true);
+          break;
+        case ThreadService.Result.NotFound:
+          await cmd.RespondAsync(Locale.Get("output-donteat-thread-notfound"), null, false, true);
+          break;
+        case ThreadService.Result.BackToForum:
+          string backToForumETA = ((TimeSpan)res.Item2!).ToDynamicString();
+          await cmd.RespondAsync(Locale.Get("output-donteat-thread-backtoforum", backToForumETA), null, false, true);
+          break;
+        case ThreadService.Result.NotFoundButInForum:
+          string notFoundButInForumETA = ((TimeSpan)res.Item2!).ToDynamicString();
+          await cmd.RespondAsync(Locale.Get("output-donteat-thread-notfoundbutinforum", notFoundButInForumETA), null, false, true);
+          break;
       }
     } else if (channel.GetChannelType() == ChannelType.Forum) { // If Forum
       ForumService.Result res = ForumService.DontEat(channel);
