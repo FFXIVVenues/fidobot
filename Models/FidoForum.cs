@@ -19,6 +19,10 @@ public class FidoForum {
 
   public static async Task<FidoForum?> CreateAsync(DBForum dbForum) {
     IGuildChannel? channel = await DiscordHelper.GetChannel(dbForum.GuildID, dbForum.ChannelID);
+    if (channel == null) {
+      return null;
+    }
+
     if (channel is not IForumChannel forum) {
       return null;
     }
