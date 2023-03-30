@@ -56,12 +56,12 @@ public class ThreadService {
       DBHelper.DeleteIfExists(threadChannel.Id);
       res = Result.Overwrote;
       overwrote = thread.EatDT;
-    }
-
-    FidoForum? forum = await DBHelper.GetForum(((IThreadChannel)threadChannel).GetParentForum().Id);
-    if (forum != null) {
-      res = Result.ForumOverride;
-      overwrote = (threadChannel.CreatedAt + forum.EatOffset).UtcDateTime;
+    } else {
+      FidoForum? forum = await DBHelper.GetForum(((IThreadChannel)threadChannel).GetParentForum().Id);
+      if (forum != null) {
+        res = Result.ForumOverride;
+        overwrote = (threadChannel.CreatedAt + forum.EatOffset).UtcDateTime;
+      }
     }
 
     DBHelper.SaveThreadToDB(threadChannel.GuildId, threadChannel.Id, eatTime);
