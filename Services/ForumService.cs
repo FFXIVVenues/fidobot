@@ -34,8 +34,6 @@ public class ForumService {
 
   public static async Task<(Result, TimeSpan?)> EatForum(IGuildChannel channel, TimeSpan eatOffset, bool eatExisting, bool eatFuture) {
     if (channel is not IForumChannel forum) {
-      // TODO: Write better error
-      Console.Error.WriteLine($"[ForumService] ERROR: Wrong channel type in EatForum: {channel.GetChannelType()}");
       return (Result.WrongChannelType, null);
     }
 

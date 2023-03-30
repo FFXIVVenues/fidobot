@@ -23,7 +23,6 @@ public class ThreadService {
 
   public static async Task<(Result, DateTime?)> EatThread(IGuildChannel threadChannel, DateTime eatDT, bool store = true) {
     if (threadChannel.GetChannelType() != ChannelType.PublicThread) {
-      Console.Error.WriteLine("[ThreadService] ERROR: Wrong channel type in EatThread: " + threadChannel.GetChannelType());
       return (Result.WrongChannelType, null);
     }
 
