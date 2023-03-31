@@ -27,6 +27,7 @@ public class Locale {
     { "output-missingperm-channel", "**ERROR:** You don't have the necessary permissions on this channel to execute that command." },
     { "output-timetype-invalid", "**ERROR:** The time type you provided is invalid: {0}" },
     { "output-timevalue-invalid", "**ERROR:** Time value is invalid (0 is invalid): {0}" },
+    { "output-channel-wrongtype", "**ERROR:** I can only be enabled on Forums or Threads. I'm a picky eater." },
     { "output-eatexisting-notforum", "**ERROR:** Eat existing can only be enabled on Forum channels." },
     { "output-eatfuture-notforum", "**ERROR:** Eat future can only be enabled on Forum channels." },
     { "output-whatdoido", "**ERROR:** So you don't want me to eat existing channels, and you don't want me to eat future channels either...\r\n" +

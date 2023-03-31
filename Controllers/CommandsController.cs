@@ -94,6 +94,8 @@ public class CommandsController {
         await cmd.RespondAsync(Locale.Get("output-missingperm-server"), null, false, true);
       } else if (channel.GetChannelType() == ChannelType.PublicThread) {
         await cmd.RespondAsync(Locale.Get("output-missingperm-channel"), null, false, true);
+      } else {
+        await cmd.RespondAsync(Locale.Get("output-channel-wrongtype"), null, false, true);
       }
       return false;
     }
@@ -115,6 +117,13 @@ public class CommandsController {
 
     // If no channel is specified, use the current channel
     channel ??= (IGuildChannel)cmd.Channel;
+
+    // If channel is not a forum or thread, respond with an error message
+    ChannelType? cType = channel.GetChannelType();
+    if (cType != ChannelType.Forum && cType != ChannelType.PublicThread) {
+      cmd.RespondAsync(Locale.Get("output-channel-wrongtype"), null, false, true);
+      return false;
+    }
 
     // If eatExisting is true but channel isn't a forum, respond with an error message
     if (eatExisting && channel.GetChannelType() != ChannelType.Forum) {
