@@ -44,6 +44,10 @@ public class CommandsController {
 
     // Create commands
     try {
+      foreach (SocketApplicationCommand cmd in await DiscordHelper.client.GetGlobalApplicationCommandsAsync()) {
+        await cmd.DeleteAsync();
+      }
+
       await DiscordHelper.client.CreateGlobalApplicationCommandAsync(eatCmdBuilder.Build());
       await DiscordHelper.client.CreateGlobalApplicationCommandAsync(donteatCmdBuilder.Build());
       await DiscordHelper.client.CreateGlobalApplicationCommandAsync(sniffCmdBuilder.Build());
