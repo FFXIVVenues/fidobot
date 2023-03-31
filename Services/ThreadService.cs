@@ -44,7 +44,7 @@ public class ThreadService {
   private static async Task<Result> Eat(IGuildChannel thread) {
     await thread.DeleteAsync();
     DBHelper.DeleteIfExists(thread.Id);
-    Console.Write("[ThreadService] Munching on #" + thread.Name + " (" + thread.Id + "), yummy !");
+    Console.WriteLine($"[ThreadService] Munching on '#{thread.Name}' ({thread.Id}), yummy !");
 
     return Result.Success;
   }
