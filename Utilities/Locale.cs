@@ -57,7 +57,8 @@ public class Locale {
 
     { "output-sniff-outsideguild", "This method can only be used inside a Discord Server." },
     { "output-sniff-forums-intro", "*sniff sniff*... I found these forums on my feeding schedule:\r\n" },
-    { "output-sniff-forums-entry", "- '#{0}' | Eat its threads {1} after creation date | Eat Existing: {2} | Started: {3}\r\n" },
+    { "output-sniff-forums-entry", "- '#{0}' | Eat its threads {1} after creation date\r\n" },
+    { "output-sniff-forums-entry-started", "- '#{0}' | Eat its threads {1} after creation date | Only eating threads created after {2} UTC\r\n" },
     { "output-sniff-forums-none", "*sniff sniff*... I didn't find any forum on my feeding schedule.\r\n" },
     { "output-sniff-threads-intro", "\r\n*sniff sniff*... I found these threads on my feeding schedule:\r\n" },
     { "output-sniff-threads-entry", "- '#{0}' | Eat in {1}\r\n" },

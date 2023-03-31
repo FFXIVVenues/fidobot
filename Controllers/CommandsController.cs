@@ -240,7 +240,11 @@ public class CommandsController {
     if (forums.Count > 0) {
       final += Locale.Get("output-sniff-forums-intro");
       foreach (FidoForum forum in forums) {
-        final += Locale.Get("output-sniff-forums-entry", forum.Channel.Name, forum.EatOffset.ToDynamicString(), forum.EatExisting, forum.Started);
+        if (!forum.EatExisting) {
+          final += Locale.Get("output-sniff-forums-entry-started", forum.Channel.Name, forum.EatOffset.ToDynamicString(), forum.Started);
+        } else {
+          final += Locale.Get("output-sniff-forums-entry", forum.Channel.Name, forum.EatOffset.ToDynamicString(), forum.EatExisting, forum.Started);
+        }
       }
     } else {
       final += Locale.Get("output-sniff-forums-none");
