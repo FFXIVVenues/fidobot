@@ -19,7 +19,7 @@ public class ForumService {
   }
 
   private static async Task CheckForumThreads(IForumChannel forum, TimeSpan eatOffset, bool eatExisting, DateTime started) {
-    foreach (IGuildChannel thread in await forum.GetActiveThreadsAsync()) {
+    foreach (IGuildChannel thread in await forum.GetAllThreads()) {
       if (!eatExisting && thread.CreatedAt.UtcDateTime <= started) { // Don't eat thread if forum is configured to not eat thread before enable datetime
         continue;
       }
