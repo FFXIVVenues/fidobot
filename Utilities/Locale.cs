@@ -41,7 +41,7 @@ public class Locale {
       "But fine, I will eat '#{1}' in {2} instead.\r\n" +
       "Pesky humans, messing with my eating schedule..." },
     { "output-eat-forum-success", "'#{0}' just for me ? Yaaay ! I will eat its threads {1} after their creation.\r\n" +
-      "Will I eat existing threads ? **{2}**\r\n" +
+      "Have I eaten existing threads ? **{2}**\r\n" +
       "Will I eat future threads ? **{3}**" },
     { "output-eat-forum-overwrote", "I already had '#{0}' on my feeding schedule, I was supposed to eat its threads {1} after their creation.\r\n" +
       "But fine, I will change my schedule and eat them {2} after their creation instead.\r\n" +
