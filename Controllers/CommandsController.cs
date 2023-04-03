@@ -60,15 +60,13 @@ public class CommandsController {
   }
 
   public static async void EatHandler(SocketSlashCommand cmd) {
+    T? GetDataValue<T>(string key, T @default) => (T?)cmd.Data.Options.FirstOrDefault(o => o.Name == key)?.Value ?? @default;
 
-    T GetDataValue<T>(string key, T @default) => 
-        (T) cmd.Data.Options.FirstOrDefault(o => o.Name == key)?.Value ?? @);
-
-    var timeType = GetDataValue("time-type", 0l);
-    var timeValue = GetDataValue("time-value", 0l);
-    var channel = GetDataValue<IGuildChannel?>("channel", null);
-    var eatExisting = GetDataValue("eat-existing", false);
-    var eatFuture = GetDataValue("eat-future", false);
+    long timeType = GetDataValue("time-type", 0L);
+    long timeValue = GetDataValue("time-value", 0L);
+    IGuildChannel? channel = GetDataValue<IGuildChannel?>("channel", null);
+    bool eatExisting = GetDataValue("eat-existing", false);
+    bool eatFuture = GetDataValue("eat-future", false);
 
     if (ValidateEatArguments(timeType, timeValue, ref channel, eatExisting, eatFuture, cmd) && await ValidatePermissions(cmd, channel!)) {
       Eat(channel!, timeType, timeValue, eatExisting, eatFuture, cmd);
