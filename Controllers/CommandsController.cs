@@ -13,34 +13,34 @@ public class CommandsController {
     List<ChannelType> channels = new() { ChannelType.PublicThread, ChannelType.Forum };
 
     // Build eat command
-    SlashCommandBuilder eatCmdBuilder = new();
-    eatCmdBuilder.WithName("eat");
-    eatCmdBuilder.WithDescription(FidoStrings.eatcmd_description);
-    eatCmdBuilder.AddOption(new SlashCommandOptionBuilder()
-      .WithName("time-type")
-      .WithDescription(FidoStrings.eatcmd_timetype_description)
-      .WithRequired(true)
-      .AddChoice(FidoStrings.seconds, (long)1)
-      .AddChoice(FidoStrings.minutes, (long)60)
-      .AddChoice(FidoStrings.hours, (long)60 * 60)
-      .AddChoice(FidoStrings.days, (long)60 * 60 * 24)
-      .WithType(ApplicationCommandOptionType.Integer)
-    );
-    eatCmdBuilder.AddOption("time-value", ApplicationCommandOptionType.Integer, FidoStrings.eatcmd_timevalue_description, true);
-    eatCmdBuilder.AddOption("channel", ApplicationCommandOptionType.Channel, FidoStrings.eatcmd_channel_description, false, null, false, null, null, null, channels);
-    eatCmdBuilder.AddOption("eat-existing", ApplicationCommandOptionType.Boolean, FidoStrings.eatcmd_eatexisting_description, false);
-    eatCmdBuilder.AddOption("eat-future", ApplicationCommandOptionType.Boolean, FidoStrings.eatcmd_eatfuture_description, false);
+    SlashCommandBuilder eatCmdBuilder = new SlashCommandBuilder()
+      .WithName("eat")
+      .WithDescription(FidoStrings.eatcmd_description)
+      .AddOption(new SlashCommandOptionBuilder()
+        .WithName("time-type")
+        .WithDescription(FidoStrings.eatcmd_timetype_description)
+        .WithRequired(true)
+        .AddChoice(FidoStrings.seconds, (long)1)
+        .AddChoice(FidoStrings.minutes, (long)60)
+        .AddChoice(FidoStrings.hours, (long)60 * 60)
+        .AddChoice(FidoStrings.days, (long)60 * 60 * 24)
+        .WithType(ApplicationCommandOptionType.Integer)
+      )
+      .AddOption("time-value", ApplicationCommandOptionType.Integer, FidoStrings.eatcmd_timevalue_description, true)
+      .AddOption("channel", ApplicationCommandOptionType.Channel, FidoStrings.eatcmd_channel_description, false, null, false, null, null, null, channels)
+      .AddOption("eat-existing", ApplicationCommandOptionType.Boolean, FidoStrings.eatcmd_eatexisting_description, false)
+      .AddOption("eat-future", ApplicationCommandOptionType.Boolean, FidoStrings.eatcmd_eatfuture_description, false);
 
     // Build donteat command
-    SlashCommandBuilder donteatCmdBuilder = new();
-    donteatCmdBuilder.WithName("donteat");
-    donteatCmdBuilder.WithDescription(FidoStrings.donteatcmd_description);
-    donteatCmdBuilder.AddOption("channel", ApplicationCommandOptionType.Channel, FidoStrings.donteatcmd_channel_description, false, null, false, null, null, null, channels);
+    SlashCommandBuilder donteatCmdBuilder = new SlashCommandBuilder()
+      .WithName("donteat")
+      .WithDescription(FidoStrings.donteatcmd_description)
+      .AddOption("channel", ApplicationCommandOptionType.Channel, FidoStrings.donteatcmd_channel_description, false, null, false, null, null, null, channels);
 
     // Build sniff command
-    SlashCommandBuilder sniffCmdBuilder = new();
-    sniffCmdBuilder.WithName("sniff");
-    sniffCmdBuilder.WithDescription(FidoStrings.sniffcmd_description);
+    SlashCommandBuilder sniffCmdBuilder = new SlashCommandBuilder()
+      .WithName("sniff")
+      .WithDescription(FidoStrings.sniffcmd_description);
 
     // Create commands
     try {
