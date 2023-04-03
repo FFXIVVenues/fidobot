@@ -40,7 +40,7 @@ public class Program {
 
   private static async Task Client_SlashCommandExecuted(SocketSlashCommand cmd)
   {
-    await cmd.DeferAsync();
+    await cmd.DeferAsync(ephemeral: true);
     switch (cmd.Data.Name)
     {
       case "eat":
