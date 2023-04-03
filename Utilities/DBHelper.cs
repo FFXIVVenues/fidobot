@@ -1,11 +1,12 @@
 ﻿using Fidobot.Models;
 using Fidobot.Models.DB;
 using LiteDB;
+using Microsoft.Extensions.Configuration;
 
 namespace Fidobot.Utilities;
 
 public static class DBHelper {
-  private static readonly LiteDatabase db = new(@"./main.db");
+  private static readonly LiteDatabase db = new(Program.Configuration.GetValue<string>("DBPATH"));
   private static readonly ILiteCollection<DBThread> threads = db.GetCollection<DBThread>();
   private static readonly ILiteCollection<DBForum> forums = db.GetCollection<DBForum>();
 

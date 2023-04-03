@@ -9,17 +9,21 @@ using Timer = System.Timers.Timer;
 namespace Fidobot;
 
 public class Program {
+  public static IConfigurationRoot Configuration { get; }
+
+  static Program() {
+    Configuration = new ConfigurationBuilder()
+      .AddUserSecrets<Program>(optional: true)
+      .AddEnvironmentVariables("FIDO_")
+      .Build();
+  }
+
   public static async Task Main() {
     DiscordHelper.client.Ready += Client_Ready;
     DiscordHelper.client.SlashCommandExecuted += Client_SlashCommandExecuted;
     DiscordHelper.client.Log += Log;
 
-    IConfigurationRoot? config = new ConfigurationBuilder()
-      .AddUserSecrets<Program>(optional: true)
-      .AddEnvironmentVariables("FIDO_")
-      .Build();
-
-    await DiscordHelper.client.LoginAsync(TokenType.Bot, config.GetValue<string>("TOKEN"));
+    await DiscordHelper.client.LoginAsync(TokenType.Bot, Configuration.GetValue<string>("TOKEN"));
     await DiscordHelper.client.StartAsync();
 
     await Task.Delay(-1);
