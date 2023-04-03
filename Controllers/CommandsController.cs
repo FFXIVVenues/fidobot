@@ -144,8 +144,8 @@ public class CommandsController {
     }
   }
 
-  private static async void EatThreadResponse(IGuildChannel channel, TimeSpan eatIn, (ThreadService.Result, DateTime?) res, SocketSlashCommand cmd) {
-    switch (res.Item1) {
+  private static async void EatThreadResponse(IGuildChannel channel, TimeSpan eatIn, (ThreadService.Result result, DateTime? eta) res, SocketSlashCommand cmd) {
+    switch (res.result) {
       case ThreadService.Result.Success:
         await cmd.RespondAsync(string.Format(FidoStrings.output_eat_thread_success, channel.Name, eatIn.ToDynamicString()), null, false, true);
         break;
@@ -153,18 +153,18 @@ public class CommandsController {
         await cmd.RespondAsync(FidoStrings.output_eat_wrongchanneltype, null, false, true);
         break;
       case ThreadService.Result.Overwrote:
-        TimeSpan overwroteETA = (DateTime)res.Item2! - DateTime.UtcNow;
+        TimeSpan overwroteETA = (DateTime)res.eta! - DateTime.UtcNow;
         await cmd.RespondAsync(string.Format(FidoStrings.output_eat_thread_overwrote, overwroteETA.ToDynamicString(), channel.Name, eatIn.ToDynamicString()), null, false, true);
         break;
       case ThreadService.Result.ForumOverride:
-        TimeSpan forumOverrideETA = (DateTime)res.Item2! - DateTime.UtcNow;
+        TimeSpan forumOverrideETA = (DateTime)res.eta! - DateTime.UtcNow;
         await cmd.RespondAsync(string.Format(FidoStrings.output_eat_thread_forumoverride, forumOverrideETA.ToDynamicString(), channel.Name, eatIn.ToDynamicString()), null, false, true);
         break;
     }
   }
 
-  private static async void EatForumResponse(IGuildChannel channel, TimeSpan eatIn, bool eatExisting, bool eatFuture, (ForumService.Result, TimeSpan?) res, SocketSlashCommand cmd) {
-    switch (res.Item1) {
+  private static async void EatForumResponse(IGuildChannel channel, TimeSpan eatIn, bool eatExisting, bool eatFuture, (ForumService.Result result, TimeSpan? eta) res, SocketSlashCommand cmd) {
+    switch (res.result) {
       case ForumService.Result.Success:
         string eatExistingResult = eatExisting ? FidoStrings.yes : FidoStrings.no;
         string eatFutureResult = eatFuture ? FidoStrings.yes : FidoStrings.no;
@@ -174,7 +174,7 @@ public class CommandsController {
         await cmd.RespondAsync(FidoStrings.output_eat_wrongchanneltype, null, false, true);
         break;
       case ForumService.Result.Overwrote:
-        TimeSpan overwroteETA = (TimeSpan)res.Item2!;
+        TimeSpan overwroteETA = (TimeSpan)res.eta!;
         await cmd.RespondAsync(string.Format(FidoStrings.output_eat_forum_overwrote, channel.Name, overwroteETA.ToDynamicString(), eatIn.ToDynamicString()), null, false, true);
         break;
     }
@@ -189,8 +189,8 @@ public class CommandsController {
     }
 
     if (channel.GetChannelType() == ChannelType.PublicThread) { // If Thread
-      (ThreadService.Result, TimeSpan?) res = await ThreadService.DontEat(channel);
-      switch (res.Item1) {
+      (ThreadService.Result result, TimeSpan? eta) = await ThreadService.DontEat(channel);
+      switch (result) {
         case ThreadService.Result.Success:
           await cmd.RespondAsync(FidoStrings.output_donteat_thread_success, null, false, true);
           break;
@@ -198,11 +198,11 @@ public class CommandsController {
           await cmd.RespondAsync(FidoStrings.output_donteat_thread_notfound, null, false, true);
           break;
         case ThreadService.Result.BackToForum:
-          string backToForumETA = ((TimeSpan)res.Item2!).ToDynamicString();
+          string backToForumETA = ((TimeSpan)eta!).ToDynamicString();
           await cmd.RespondAsync(string.Format(FidoStrings.output_donteat_thread_backtoforum, backToForumETA), null, false, true);
           break;
         case ThreadService.Result.NotFoundButInForum:
-          string notFoundButInForumETA = ((TimeSpan)res.Item2!).ToDynamicString();
+          string notFoundButInForumETA = ((TimeSpan)eta!).ToDynamicString();
           await cmd.RespondAsync(string.Format(FidoStrings.output_donteat_thread_notfoundbutinforum, notFoundButInForumETA), null, false, true);
           break;
       }
