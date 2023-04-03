@@ -16,10 +16,10 @@ public class Program {
 
     IConfigurationRoot? config = new ConfigurationBuilder()
       .AddUserSecrets<Program>(optional: true)
-      .AddEnvironmentVariables("FIDO_TOKEN")
+      .AddEnvironmentVariables("FIDO_")
       .Build();
 
-    await DiscordHelper.client.LoginAsync(TokenType.Bot, config.GetSection("FIDO_TOKEN").Value);
+    await DiscordHelper.client.LoginAsync(TokenType.Bot, config.GetValue<string>("TOKEN"));
     await DiscordHelper.client.StartAsync();
 
     await Task.Delay(-1);
