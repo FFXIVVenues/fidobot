@@ -1,0 +1,328 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Generic -->
+  <data name="yes" xml:space="preserve">
+    <value>Yes</value>
+    <comment>Generic</comment>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>No</value>
+    <comment>Generic</comment>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>Second(s)</value>
+    <comment>Generic</comment>
+  </data>
+  <data name="minutes" xml:space="preserve">
+    <value>Minute(s)</value>
+    <comment>Generic</comment>
+  </data>
+  <data name="hours" xml:space="preserve">
+    <value>Hour(s)</value>
+    <comment>Generic</comment>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>Day(s)</value>
+    <comment>Generic</comment>
+  </data>
+
+  <!-- Commands -->
+  <data name="eatcmd-description" xml:space="preserve">
+    <value>Eat this thread or configure specified forum for Fido.</value>
+    <comment>Commands</comment>
+  </data>
+  <data name="eatcmd-timetype-description" xml:space="preserve">
+    <value>Time configuration type</value>
+    <comment>Commands</comment>
+  </data>
+  <data name="eatcmd-timevalue-description" xml:space="preserve">
+    <value>Time configuration value</value>
+    <comment>Commands</comment>
+  </data>
+  <data name="eatcmd-channel-description" xml:space="preserve">
+    <value>Specify a thread or forum.</value>
+    <comment>Commands</comment>
+  </data>
+  <data name="eatcmd-eatexisting-description" xml:space="preserve">
+    <value>(Forum only) Should Fido eat existing threads with given time options ?</value>
+    <comment>Commands</comment>
+  </data>
+  <data name="eatcmd-eatfuture-description" xml:space="preserve">
+    <value>(Forum only) Should Fido eat future threads with given time options ?</value>
+    <comment>Commands</comment>
+  </data>
+  <data name="donteatcmd-description" xml:space="preserve">
+    <value>Disables Fido from eating this channel or forum.</value>
+    <comment>Commands</comment>
+  </data>
+  <data name="donteatcmd-channel-description" xml:space="preserve">
+    <value>Specify a thread or forum.</value>
+    <comment>Commands</comment>
+  </data>
+  <data name="sniffcmd-description" xml:space="preserve">
+    <value>Lists configured forums and threads.</value>
+    <comment>Commands</comment>
+  </data>
+
+  <!-- Outputs -->
+  <data name="output-missingperm-server" xml:space="preserve">
+    <value>**ERROR:** You don't have the necessary permissions on this server to execute that command.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-missingperm-channel" xml:space="preserve">
+    <value>**ERROR:** You don't have the necessary permissions on this channel to execute that command.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-timetype-invalid" xml:space="preserve">
+    <value>**ERROR:** The time type you provided is invalid: {0}</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-timevalue-invalid" xml:space="preserve">
+    <value>**ERROR:** Time value is invalid (0 is invalid): {0}</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-channel-wrongtype" xml:space="preserve">
+    <value>**ERROR:** I can only be enabled on Forums or Threads. I'm a picky eater.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-eatexisting-notforum" xml:space="preserve">
+    <value>**ERROR:** Eat existing can only be enabled on Forum channels.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-eatfuture-notforum" xml:space="preserve">
+    <value>**ERROR:** Eat future can only be enabled on Forum channels.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-whatdoido" xml:space="preserve">
+    <value>**ERROR:** So you don't want me to eat existing channels, and you don't want me to eat future channels either...
+Are you trying to starve me ?!</value>
+    <comment>Outputs</comment>
+  </data>
+
+  <data name="output-eat-wrongchanneltype" xml:space="preserve">
+    <value>**ERROR:** `/eat` can only be used on Forums or Threads. I'm a picky eater.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-eat-thread-success" xml:space="preserve">
+    <value>Noted ! I will eat {0} in {1}. I'm salivating already...</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-eat-thread-overwrote" xml:space="preserve">
+    <value>I already planned to eat this thread in {0}.
+But fine, I will eat '#{1}' in {2} instead.
+Pesky humans, messing with my eating schedule...</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-eat-thread-forumoverride" xml:space="preserve">
+    <value>Because this thread is inside a forum I have on my feeding schedule, I was supposed to eat it in {0}.
+But fine, I will eat '#{1}' in {2} instead.
+Pesky humans, messing with my eating schedule...</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-eat-forum-success" xml:space="preserve">
+    <value>'#{0}' just for me ? Yaaay ! I will eat its threads {1} after their creation.
+Have I eaten existing threads ? **{2}**
+Will I eat future threads ? **{3}**</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-eat-forum-overwrote" xml:space="preserve">
+    <value>I already had '#{0}' on my feeding schedule, I was supposed to eat its threads {1} after their creation.
+But fine, I will change my schedule and eat them {2} after their creation instead.
+Pesky humans, messing with my eating schedule...</value>
+    <comment>Outputs</comment>
+  </data>
+
+  <data name="output-donteat-wrongchanneltype" xml:space="preserve">
+    <value>**ERROR:** `/donteat` can only be used on Forums or Threads. I'm a picky eater.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-donteat-thread-success" xml:space="preserve">
+    <value>Okaaayyy... I won't eat that thread.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-donteat-thread-notfound" xml:space="preserve">
+    <value>Was I supposed to eat that thread ? It wasn't on my feeding schedule...</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-donteat-thread-backtoforum" xml:space="preserve">
+    <value>Okaaayyy... I will only eat that thread in {0} now because it is in a forum that is on my feeding schedule.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-donteat-thread-notfoundbutinforum" xml:space="preserve">
+    <value>Was I supposed to eat that thread outside of its forum feeding schedule which is in {0} ? It wasn't on my feeding schedule...</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-donteat-forum-success" xml:space="preserve">
+    <value>Okaaayyy... I won't eat the threads in this forum.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-donteat-forum-notfound" xml:space="preserve">
+    <value>Was I supposed to eat the threads in this forum ? They weren't on my feeding schedule...</value>
+    <comment>Outputs</comment>
+  </data>
+
+  <data name="output-sniff-outsideguild" xml:space="preserve">
+    <value>This method can only be used inside a Discord Server.</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-sniff-forums-intro" xml:space="preserve">
+    <value>*sniff sniff*... I found these forums on my feeding schedule:
+</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-sniff-forums-entry" xml:space="preserve">
+    <value>- '#{0}' | Eat its threads {1} after creation date
+</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-sniff-forums-entry-started" xml:space="preserve">
+    <value>- '#{0}' | Eat its threads {1} after creation date | Only eating threads created after {2} UTC
+</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-sniff-forums-none" xml:space="preserve">
+    <value>*sniff sniff*... I didn't find any forum on my feeding schedule.
+</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-sniff-threads-intro" xml:space="preserve">
+    <value>
+*sniff sniff*... I found these threads on my feeding schedule:
+</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-sniff-threads-entry" xml:space="preserve">
+    <value>- '#{0}' | Eat in {1}
+</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-sniff-threads-none" xml:space="preserve">
+    <value>
+*sniff sniff*... I didn't find any thread on my feeding schedule.
+</value>
+    <comment>Outputs</comment>
+  </data>
+  <data name="output-sniff-outro" xml:space="preserve">
+    <value>
+That's my whole feeding schedule ! I'm hungry just thinking about it now...</value>
+    <comment>Outputs</comment>
+  </data>
+</root>
