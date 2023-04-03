@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKER_ACCESS_TOKEN}}
 
       - name: Build docker image
-        run: docker build ./ -t ${{ secrets.DOCKER_USERNAME }}/fidobot:latest --build-arg NUGET_REPO_PASSWORD=${{ secrets.NUGET_REPO_PASSWORD }}
+        run: docker build ./ -t ${{ secrets.DOCKER_USERNAME }}/fidobot:latest
 
       - name: Push docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/fidobot:latest
