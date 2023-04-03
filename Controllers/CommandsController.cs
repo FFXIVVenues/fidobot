@@ -59,18 +59,24 @@ public class CommandsController {
     Console.WriteLine("[CommandsController] Commands created successfully.");
   }
 
-  public static async void EatHandler(SocketSlashCommand cmd) {
-    T? GetDataValue<T>(string key, T @default) => (T?)cmd.Data.Options.FirstOrDefault(o => o.Name == key)?.Value ?? @default;
-
-    long timeType = GetDataValue("time-type", 0L);
-    long timeValue = GetDataValue("time-value", 0L);
-    IGuildChannel? channel = GetDataValue<IGuildChannel?>("channel", null);
-    bool eatExisting = GetDataValue("eat-existing", false);
-    bool eatFuture = GetDataValue("eat-future", false);
+  public static async Task EatHandler(SocketSlashCommand cmd) {
+    long timeType = GetDataValue("time-type", 0L, cmd);
+    long timeValue = GetDataValue("time-value", 0L, cmd);
+    IGuildChannel? channel = GetDataValue<IGuildChannel?>("channel", null, cmd);
+    bool eatExisting = GetDataValue("eat-existing", false, cmd);
+    bool eatFuture = GetDataValue("eat-future", false, cmd);
 
     if (ValidateEatArguments(timeType, timeValue, ref channel, eatExisting, eatFuture, cmd) && await ValidatePermissions(cmd, channel!)) {
       Eat(channel!, timeType, timeValue, eatExisting, eatFuture, cmd);
     }
+  }
+
+  private static T GetDataValue<T>(string key, T @default, SocketSlashCommand cmd)
+  {
+    var value =  cmd.Data.Options.FirstOrDefault(o => o.Name == key)?.Value;
+    if (value is T tValue)
+      return tValue;
+    return @default;
   }
 
   private static async Task<bool> ValidatePermissions(SocketSlashCommand cmd, IGuildChannel channel) {
@@ -180,7 +186,7 @@ public class CommandsController {
     }
   }
 
-  public static async void DontEatHandler(SocketSlashCommand cmd) {
+  public static async Task DontEatHandler(SocketSlashCommand cmd) {
     IGuildChannel? channel = cmd.Data.Options.FirstOrDefault()?.Value as IGuildChannel;
     channel ??= (IGuildChannel)cmd.Channel;
 
@@ -218,7 +224,7 @@ public class CommandsController {
     }
   }
 
-  public static async void SniffHandler(SocketSlashCommand cmd) {
+  public static async Task SniffHandler(SocketSlashCommand cmd) {
     if (cmd.GuildId == null) {
       await cmd.RespondAsync("This method can only be used in a Discord Server.", null, false, true);
       return;

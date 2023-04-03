@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using System.Runtime.CompilerServices;
+using Discord;
 using Discord.WebSocket;
 using Fidobot.Controllers;
 using Fidobot.Services;
@@ -37,20 +38,19 @@ public class Program {
     eatChecker.Enabled = true;
   }
 
-  private static Task Client_SlashCommandExecuted(SocketSlashCommand cmd) {
-    switch (cmd.Data.Name) {
+  private static async Task Client_SlashCommandExecuted(SocketSlashCommand cmd) {
+    switch (cmd.Data.Name)
+    {
       case "eat":
-        CommandsController.EatHandler(cmd);
+        await CommandsController.EatHandler(cmd);
         break;
       case "donteat":
-        CommandsController.DontEatHandler(cmd);
+        await CommandsController.DontEatHandler(cmd);
         break;
       case "sniff":
-        CommandsController.SniffHandler(cmd);
+        await CommandsController.SniffHandler(cmd);
         break;
     }
-
-    return Task.CompletedTask;
   }
 
   public static Task Log(LogMessage msg) {
