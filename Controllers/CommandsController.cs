@@ -82,11 +82,11 @@ public class CommandsController {
   private static async Task<bool> ValidatePermissions(SocketSlashCommand cmd, IGuildChannel channel) {
     if (!DiscordHelper.CanManageThreads((SocketGuildUser)cmd.User, channel!)) {
       if (channel.GetChannelType() == ChannelType.Forum) {
-        await cmd.RespondAsync(FidoStrings.output_missingperm_server, null, false, true);
+        await cmd.FollowupAsync(FidoStrings.output_missingperm_server, null, false, true);
       } else if (channel.GetChannelType() == ChannelType.PublicThread) {
-        await cmd.RespondAsync(FidoStrings.output_missingperm_channel, null, false, true);
+        await cmd.FollowupAsync(FidoStrings.output_missingperm_channel, null, false, true);
       } else {
-        await cmd.RespondAsync(FidoStrings.output_channel_wrongtype, null, false, true);
+        await cmd.FollowupAsync(FidoStrings.output_channel_wrongtype, null, false, true);
       }
       return false;
     }
@@ -96,13 +96,13 @@ public class CommandsController {
   private static bool ValidateEatArguments(long timeType, long timeValue, ref IGuildChannel? channel, bool eatExisting, bool eatFuture, SocketSlashCommand cmd) {
     // If time type is zero or not equal to predefined values, respond error message
     if (timeType == 0 || (timeType != 1 && timeType != 60 && timeType != (long)60 * 60 && timeType != (long)60 * 60 * 24)) {
-      cmd.RespondAsync(string.Format(FidoStrings.output_timetype_invalid, timeType), null, false, true);
+      cmd.FollowupAsync(string.Format(FidoStrings.output_timetype_invalid, timeType), null, false, true);
       return false;
     }
 
     // If time value is wrong, respond with an error message
     if (timeValue <= 0 || (timeValue * timeType) > TimeSpan.MaxValue.TotalSeconds) {
-      cmd.RespondAsync(string.Format(FidoStrings.output_timevalue_invalid, timeValue), null, false, true);
+      cmd.FollowupAsync(string.Format(FidoStrings.output_timevalue_invalid, timeValue), null, false, true);
       return false;
     }
 
@@ -112,25 +112,25 @@ public class CommandsController {
     // If channel is not a forum or thread, respond with an error message
     ChannelType? cType = channel.GetChannelType();
     if (cType != ChannelType.Forum && cType != ChannelType.PublicThread) {
-      cmd.RespondAsync(FidoStrings.output_channel_wrongtype, null, false, true);
+      cmd.FollowupAsync(FidoStrings.output_channel_wrongtype, null, false, true);
       return false;
     }
 
     // If eatExisting is true but channel isn't a forum, respond with an error message
     if (eatExisting && channel.GetChannelType() != ChannelType.Forum) {
-      cmd.RespondAsync(FidoStrings.output_eatexisting_notforum, null, false, true);
+      cmd.FollowupAsync(FidoStrings.output_eatexisting_notforum, null, false, true);
       return false;
     }
 
     // If eatFuture is true but channel isn't a forum, respond with an error message
     if (eatFuture && channel.GetChannelType() != ChannelType.Forum) {
-      cmd.RespondAsync(FidoStrings.output_eatfuture_notforum, null, false, true);
+      cmd.FollowupAsync(FidoStrings.output_eatfuture_notforum, null, false, true);
       return false;
     }
 
     // If both eatExisting and eatFuture are disabled on forum
     if (channel.GetChannelType() == ChannelType.Forum && !eatExisting && !eatFuture) {
-      cmd.RespondAsync(FidoStrings.output_whatdoido, null, false, true);
+      cmd.FollowupAsync(FidoStrings.output_whatdoido, null, false, true);
       return false;
     }
 
@@ -153,18 +153,18 @@ public class CommandsController {
   private static async void EatThreadResponse(IGuildChannel channel, TimeSpan eatIn, (ThreadService.Result result, DateTime? eta) res, SocketSlashCommand cmd) {
     switch (res.result) {
       case ThreadService.Result.Success:
-        await cmd.RespondAsync(string.Format(FidoStrings.output_eat_thread_success, channel.Name, eatIn.ToDynamicString()), null, false, true);
+        await cmd.FollowupAsync(string.Format(FidoStrings.output_eat_thread_success, channel.Name, eatIn.ToDynamicString()), null, false, true);
         break;
       case ThreadService.Result.WrongChannelType:
-        await cmd.RespondAsync(FidoStrings.output_eat_wrongchanneltype, null, false, true);
+        await cmd.FollowupAsync(FidoStrings.output_eat_wrongchanneltype, null, false, true);
         break;
       case ThreadService.Result.Overwrote:
         TimeSpan overwroteETA = (DateTime)res.eta! - DateTime.UtcNow;
-        await cmd.RespondAsync(string.Format(FidoStrings.output_eat_thread_overwrote, overwroteETA.ToDynamicString(), channel.Name, eatIn.ToDynamicString()), null, false, true);
+        await cmd.FollowupAsync(string.Format(FidoStrings.output_eat_thread_overwrote, overwroteETA.ToDynamicString(), channel.Name, eatIn.ToDynamicString()), null, false, true);
         break;
       case ThreadService.Result.ForumOverride:
         TimeSpan forumOverrideETA = (DateTime)res.eta! - DateTime.UtcNow;
-        await cmd.RespondAsync(string.Format(FidoStrings.output_eat_thread_forumoverride, forumOverrideETA.ToDynamicString(), channel.Name, eatIn.ToDynamicString()), null, false, true);
+        await cmd.FollowupAsync(string.Format(FidoStrings.output_eat_thread_forumoverride, forumOverrideETA.ToDynamicString(), channel.Name, eatIn.ToDynamicString()), null, false, true);
         break;
     }
   }
@@ -174,14 +174,14 @@ public class CommandsController {
       case ForumService.Result.Success:
         string eatExistingResult = eatExisting ? FidoStrings.yes : FidoStrings.no;
         string eatFutureResult = eatFuture ? FidoStrings.yes : FidoStrings.no;
-        await cmd.RespondAsync(string.Format(FidoStrings.output_eat_forum_success, channel.Name, eatIn.ToDynamicString(), eatExistingResult, eatFutureResult), null, false, true);
+        await cmd.FollowupAsync(string.Format(FidoStrings.output_eat_forum_success, channel.Name, eatIn.ToDynamicString(), eatExistingResult, eatFutureResult), null, false, true);
         break;
       case ForumService.Result.WrongChannelType:
-        await cmd.RespondAsync(FidoStrings.output_eat_wrongchanneltype, null, false, true);
+        await cmd.FollowupAsync(FidoStrings.output_eat_wrongchanneltype, null, false, true);
         break;
       case ForumService.Result.Overwrote:
         TimeSpan overwroteETA = (TimeSpan)res.eta!;
-        await cmd.RespondAsync(string.Format(FidoStrings.output_eat_forum_overwrote, channel.Name, overwroteETA.ToDynamicString(), eatIn.ToDynamicString()), null, false, true);
+        await cmd.FollowupAsync(string.Format(FidoStrings.output_eat_forum_overwrote, channel.Name, overwroteETA.ToDynamicString(), eatIn.ToDynamicString()), null, false, true);
         break;
     }
   }
@@ -198,40 +198,40 @@ public class CommandsController {
       (ThreadService.Result result, TimeSpan? eta) = await ThreadService.DontEat(channel);
       switch (result) {
         case ThreadService.Result.Success:
-          await cmd.RespondAsync(FidoStrings.output_donteat_thread_success, null, false, true);
+          await cmd.FollowupAsync(FidoStrings.output_donteat_thread_success, null, false, true);
           break;
         case ThreadService.Result.NotFound:
-          await cmd.RespondAsync(FidoStrings.output_donteat_thread_notfound, null, false, true);
+          await cmd.FollowupAsync(FidoStrings.output_donteat_thread_notfound, null, false, true);
           break;
         case ThreadService.Result.BackToForum:
           string backToForumETA = ((TimeSpan)eta!).ToDynamicString();
-          await cmd.RespondAsync(string.Format(FidoStrings.output_donteat_thread_backtoforum, backToForumETA), null, false, true);
+          await cmd.FollowupAsync(string.Format(FidoStrings.output_donteat_thread_backtoforum, backToForumETA), null, false, true);
           break;
         case ThreadService.Result.NotFoundButInForum:
           string notFoundButInForumETA = ((TimeSpan)eta!).ToDynamicString();
-          await cmd.RespondAsync(string.Format(FidoStrings.output_donteat_thread_notfoundbutinforum, notFoundButInForumETA), null, false, true);
+          await cmd.FollowupAsync(string.Format(FidoStrings.output_donteat_thread_notfoundbutinforum, notFoundButInForumETA), null, false, true);
           break;
       }
     } else if (channel.GetChannelType() == ChannelType.Forum) { // If Forum
       ForumService.Result res = ForumService.DontEat(channel);
       if (res == ForumService.Result.Success) {
-        await cmd.RespondAsync(FidoStrings.output_donteat_forum_success, null, false, true);
+        await cmd.FollowupAsync(FidoStrings.output_donteat_forum_success, null, false, true);
       } else {
-        await cmd.RespondAsync(FidoStrings.output_donteat_forum_notfound, null, false, true);
+        await cmd.FollowupAsync(FidoStrings.output_donteat_forum_notfound, null, false, true);
       }
     } else { // If not thread or forum
-      await cmd.RespondAsync(FidoStrings.output_donteat_wrongchanneltype, null, false, true);
+      await cmd.FollowupAsync(FidoStrings.output_donteat_wrongchanneltype, null, false, true);
     }
   }
 
   public static async Task SniffHandler(SocketSlashCommand cmd) {
     if (cmd.GuildId == null) {
-      await cmd.RespondAsync("This method can only be used in a Discord Server.", null, false, true);
+      await cmd.FollowupAsync("This method can only be used in a Discord Server.", null, false, true);
       return;
     }
 
     if (!DiscordHelper.CanManageThreads((SocketGuildUser)cmd.User)) {
-      await cmd.RespondAsync(FidoStrings.output_missingperm_server, null, false, true);
+      await cmd.FollowupAsync(FidoStrings.output_missingperm_server, null, false, true);
       return;
     }
 
@@ -262,6 +262,6 @@ public class CommandsController {
     }
 
     final += FidoStrings.output_sniff_outro;
-    await cmd.RespondAsync(final, null, false, true);
+    await cmd.FollowupAsync(final, null, false, true);
   }
 }

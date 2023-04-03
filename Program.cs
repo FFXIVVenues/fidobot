@@ -31,14 +31,16 @@ public class Program {
   }
 
   private static async Task Client_Ready() {
-    await CommandsController.CreateCommands();
+    // await CommandsController.CreateCommands();
 
     Timer eatChecker = new(3 * 1000); // TODO: Make this value configurable
     eatChecker.Elapsed += EatCheckerElapsed;
     eatChecker.Enabled = true;
   }
 
-  private static async Task Client_SlashCommandExecuted(SocketSlashCommand cmd) {
+  private static async Task Client_SlashCommandExecuted(SocketSlashCommand cmd)
+  {
+    await cmd.DeferAsync();
     switch (cmd.Data.Name)
     {
       case "eat":
