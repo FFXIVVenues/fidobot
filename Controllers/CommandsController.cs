@@ -60,32 +60,15 @@ public class CommandsController {
   }
 
   public static async void EatHandler(SocketSlashCommand cmd) {
-    long timeType = 0;
-    long timeValue = 0;
-    IGuildChannel? channel = null;
-    bool eatExisting = false;
-    bool eatFuture = false;
 
-    // Loop through command options and assign values to variables
-    foreach (SocketSlashCommandDataOption option in cmd.Data.Options) {
-      switch (option.Name) {
-        case "time-type":
-          timeType = (long)option.Value;
-          break;
-        case "time-value":
-          timeValue = (long)option.Value;
-          break;
-        case "channel":
-          channel = (IGuildChannel)option.Value;
-          break;
-        case "eat-existing":
-          eatExisting = (bool)option.Value;
-          break;
-        case "eat-future":
-          eatFuture = (bool)option.Value;
-          break;
-      }
-    }
+    T GetDataValue<T>(string key, T @default) => 
+        (T) cmd.Data.Options.FirstOrDefault(o => o.Name == key)?.Value ?? @);
+
+    var timeType = GetDataValue("time-type", 0l);
+    var timeValue = GetDataValue("time-value", 0l);
+    var channel = GetDataValue<IGuildChannel?>("channel", null);
+    var eatExisting = GetDataValue("eat-existing", false);
+    var eatFuture = GetDataValue("eat-future", false);
 
     if (ValidateEatArguments(timeType, timeValue, ref channel, eatExisting, eatFuture, cmd) && await ValidatePermissions(cmd, channel!)) {
       Eat(channel!, timeType, timeValue, eatExisting, eatFuture, cmd);
