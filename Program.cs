@@ -31,7 +31,8 @@ public class Program {
     
     while (true)
     {
-      Eat();
+      if (DiscordHelper.client.ConnectionState == ConnectionState.Connected)
+        Eat();
       await Task.Delay(interval);
     }
   }
