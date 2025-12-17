@@ -6,15 +6,18 @@ on:
       - main
 
 jobs:
-  build_and_publish:
+  publish_for_platforms:
     strategy:
       matrix:
         include:
-          - runner: ubuntu-24.04
+          - name: Publish for amd64 
+            runner: ubuntu-24.04
             platform: linux/amd64
-          - runner: ubuntu-24.04-arm
+          - name: Publish for arm64
+            runner: ubuntu-24.04-arm
             platform: linux/arm64
             
+    name: ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
 
     steps:
@@ -37,8 +40,9 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/fidobot:latest-${{ matrix.platform == 'linux/amd64' && 'amd64' || 'arm64' }}
 
-  create_manifest:
-    needs: build_and_publish
+  publish_multiplatform_manifest:
+    name: Publish multiplatform manifest
+    needs: publish_for_platforms
     runs-on: ubuntu-latest
     steps:
       - name: Docker Login
