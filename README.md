@@ -1,5 +1,5 @@
 # fidobot
-A Discord bot to clean 
+A Discord bot to clean up old threads in forums.
 
 # Usage
 - `/eat` : Configure the current (or specified) thread to be deleted. If used on a forum, configures default behaviour for existing and/or future threads.

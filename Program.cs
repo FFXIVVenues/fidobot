@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Timers;
 using Discord;
 using Discord.WebSocket;
 using Fidobot.Controllers;
@@ -19,23 +20,20 @@ public class Program {
       .Build();
   }
 
-  public static async Task Main() {
-    DiscordHelper.client.Ready += Client_Ready;
+  public static async Task<int> Main() {
     DiscordHelper.client.SlashCommandExecuted += Client_SlashCommandExecuted;
     DiscordHelper.client.Log += Log;
-
+    
     await DiscordHelper.client.LoginAsync(TokenType.Bot, Configuration.GetValue<string>("TOKEN"));
     await DiscordHelper.client.StartAsync();
-
-    await Task.Delay(-1);
-  }
-
-  private static async Task Client_Ready() {
-    // await CommandsController.CreateCommands();
-
-    Timer eatChecker = new(3 * 1000); // TODO: Make this value configurable
-    eatChecker.Elapsed += EatCheckerElapsed;
-    eatChecker.Enabled = true;
+    
+    var interval = Configuration.GetValue("INTERVAL", 60 * 1000);
+    
+    while (true)
+    {
+      Eat();
+      await Task.Delay(interval);
+    }
   }
 
   private static async Task Client_SlashCommandExecuted(SocketSlashCommand cmd)
@@ -60,7 +58,7 @@ public class Program {
     return Task.CompletedTask;
   }
 
-  private static void EatCheckerElapsed(object? sender, System.Timers.ElapsedEventArgs e) {
+  private static void Eat() {
     ThreadService.CheckThreads();
     ForumService.CheckForums();
   }

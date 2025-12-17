@@ -12,7 +12,8 @@ public class ThreadService {
     ForumOverride,
     NotFound,
     NotFoundButInForum,
-    BackToForum
+    BackToForum,
+    GenericError
   }
 
   public static async void CheckThreads() {
@@ -42,10 +43,18 @@ public class ThreadService {
   }
 
   private static async Task<Result> Eat(IGuildChannel thread) {
-    await thread.DeleteAsync();
-    DBHelper.DeleteIfExists(thread.Id);
-    Console.WriteLine($"[ThreadService] Munching on '#{thread.Name}' ({thread.Id}), yummy !");
-
+    Console.WriteLine($"{DateTime.UtcNow} [ThreadService] Munching on '#{thread.Name}' ({thread.Id}), yummy !");
+    try
+    {
+      await thread.DeleteAsync();
+      DBHelper.DeleteIfExists(thread.Id);
+    }
+    catch (Exception e)
+    {
+      Console.WriteLine($"{DateTime.UtcNow} [ThreadService] Couldn't much on '#{thread.Name}' ({thread.Id}), ;(.");
+      Console.Error.WriteLine(e);
+      return Result.GenericError;
+    }
     return Result.Success;
   }
 

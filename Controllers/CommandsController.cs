@@ -20,7 +20,6 @@ public class CommandsController {
         .WithName("time-type")
         .WithDescription(FidoStrings.eatcmd_timetype_description)
         .WithRequired(true)
-        .AddChoice(FidoStrings.seconds, (long)1)
         .AddChoice(FidoStrings.minutes, (long)60)
         .AddChoice(FidoStrings.hours, (long)60 * 60)
         .AddChoice(FidoStrings.days, (long)60 * 60 * 24)
