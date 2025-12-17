@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fidobot", "Fidobot.csproj",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{91C59C71-3ED2-42BE-B321-EE053566BD3D}"
 	ProjectSection(SolutionItems) = preProject
-		C:\Development\FFXIV Venues\FFXIVVenues.DataTransit\.github\workflows\release.yml = C:\Development\FFXIV Venues\FFXIVVenues.DataTransit\.github\workflows\release.yml
+		.github\workflows\main-release.yml = .github\workflows\main-release.yml
 	EndProjectSection
 EndProject
 Global
