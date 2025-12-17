@@ -5,6 +5,11 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fidobot", "Fidobot.csproj", "{4072DF3B-D0AD-4C79-B172-ED9BCE09B89F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{91C59C71-3ED2-42BE-B321-EE053566BD3D}"
+	ProjectSection(SolutionItems) = preProject
+		C:\Development\FFXIV Venues\FFXIVVenues.DataTransit\.github\workflows\release.yml = C:\Development\FFXIV Venues\FFXIVVenues.DataTransit\.github\workflows\release.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
